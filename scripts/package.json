@@ -1,0 +1,29 @@
+{
+  "name": "ai-seo-startup-scripts",
+  "version": "1.0.0",
+  "description": "Lead generation and outreach automation scripts",
+  "main": "index.js",
+  "scripts": {
+    "scrape-leads": "node advanced-lead-scraper.js",
+    "daily-outreach": "node automated-outreach.js daily",
+    "follow-up": "node automated-outreach.js followup",
+    "schedule-campaigns": "node automated-outreach.js schedule",
+    "analytics": "node analytics-tracker.js dashboard",
+    "weekly-report": "node analytics-tracker.js weekly",
+    "setup-stripe": "node setup-stripe-products.js"
+  },
+  "dependencies": {
+    "puppeteer": "^21.0.0",
+    "nodemailer": "^6.9.0",
+    "stripe": "^14.0.0"
+  },
+  "keywords": [
+    "lead-generation",
+    "email-outreach",
+    "automation",
+    "startup",
+    "ai"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}
