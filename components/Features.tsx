@@ -8,8 +8,8 @@ import {
 const features = [
   {
     icon: DocumentTextIcon,
-    title: 'AI-Powered Content',
-    description: 'Generate high-quality, engaging blog posts using advanced AI technology.'
+    title: 'Groq AI-Powered',
+    description: 'Generate high-quality, engaging blog posts using Groq AI with Llama 3.1 - blazing fast at 560 tokens/sec.'
   },
   {
     icon: MagnifyingGlassIcon,
