@@ -8,13 +8,14 @@ A complete AI-powered SaaS application that generates SEO-optimized blog posts i
 ## 🚀 What This Is
 
 This is a **fully functional AI startup** that:
-- Generates SEO-optimized blog content using OpenAI
+- Generates SEO-optimized blog content using **Groq AI (Llama 3.1 8B)** - fastest & cheapest
 - Has a complete landing page with pricing
 - Includes user authentication and dashboard
 - Processes payments via Stripe
 - Stores data in Supabase
 - Includes lead generation and email outreach scripts
 - **Complete automation for scaling to ₹15L/month**
+- **Cost**: ~$0.001 per article (99% profit margin)
 
 ## 💰 Business Model
 
@@ -25,7 +26,7 @@ This is a **fully functional AI startup** that:
 ## 🛠 Complete Tech Stack
 
 - **Frontend**: Next.js 14, React, Tailwind CSS
-- **AI**: OpenAI GPT-3.5-turbo
+- **AI**: Groq AI (Llama 3.1 8B Instant) - 560 tokens/sec, $0.05/$0.08 per 1M tokens
 - **Database**: Supabase (PostgreSQL)
 - **Payments**: Stripe
 - **Hosting**: Vercel
@@ -97,7 +98,7 @@ This is a **fully functional AI startup** that:
 2. **Set up environment:**
    ```bash
    cp .env.local.example .env.local
-   # Fill in your API keys (OpenAI, Supabase, Stripe)
+   # Fill in your API keys (Groq, Supabase, Stripe)
    ```
 
 3. **Deploy to Vercel:**

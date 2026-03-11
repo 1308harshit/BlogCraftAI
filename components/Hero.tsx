@@ -20,7 +20,7 @@ export default function Hero() {
             BlogCraft AI
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto">
-            Generate Google-optimized blog posts in 60 seconds. 
+            Generate Google-optimized blog posts in 60 seconds with Groq AI. 
             Save ₹50,000+ per month on content creation.
           </p>
           
