@@ -14,7 +14,24 @@ export default function Hero() {
 
   return (
     <div className="bg-gradient-to-br from-primary-50 to-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-16">
+      {/* Navigation Bar */}
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold text-primary-600">
+            BlogCraft AI
+          </Link>
+          <div className="flex gap-4">
+            <Link href="/login" className="text-gray-600 hover:text-gray-900 px-4 py-2">
+              Log In
+            </Link>
+            <Link href="/signup" className="btn-primary px-6 py-2">
+              Sign Up
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16">
         <div className="text-center">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
             BlogCraft AI
@@ -25,8 +42,11 @@ export default function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-            <Link href="/generator" className="btn-primary text-lg px-8 py-3">
-              Try Free Demo
+            <Link href="/studio" className="btn-primary text-lg px-8 py-3">
+              🚀 AI Studio (Advanced)
+            </Link>
+            <Link href="/generator" className="btn-secondary text-lg px-8 py-3">
+              Try Simple Demo
             </Link>
             <form onSubmit={handleEarlyAccess} className="flex gap-2">
               <input
