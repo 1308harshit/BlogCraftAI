@@ -9,7 +9,7 @@ const supabase = createClient(
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, name } = await request.json()
+    const { email, name, password, plan } = await request.json()
 
     if (!email || !name) {
       return NextResponse.json(
@@ -35,13 +35,13 @@ export async function POST(request: NextRequest) {
       const user = await mockDb.createUser({
         email,
         name,
-        plan: 'founder',
+        plan: plan || 'founder',
         status: 'trial'
       })
 
       return NextResponse.json({ 
         message: 'Account created successfully (Demo Mode)',
-        user: { id: user.id, email: user.email, name: user.name }
+        user: { id: user.id, email: user.email, name: user.name, plan: user.plan }
       })
     }
 
