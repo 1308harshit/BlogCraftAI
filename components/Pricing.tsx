@@ -9,6 +9,10 @@ const plans = [
     description: 'Limited time early access pricing',
     features: [
       'Unlimited blog posts',
+      'AI Content Automation',
+      'Revenue Intelligence Dashboard',
+      'Viral Prediction Lab',
+      'Content Remix Engine',
       'SEO optimization',
       'Keyword suggestions',
       'WordPress export',
@@ -20,18 +24,21 @@ const plans = [
     popular: true
   },
   {
-    name: 'Regular Price',
+    name: 'Enterprise',
     price: '₹2,999',
     period: '/month',
-    description: 'Standard pricing after launch',
+    description: 'Full automation suite for agencies',
     features: [
-      'Unlimited blog posts',
-      'SEO optimization',
-      'Keyword suggestions',
-      'WordPress export',
-      'Standard support'
+      'Everything in Founder',
+      'White-label solution',
+      'API access',
+      'Custom AI models',
+      'Team collaboration',
+      'Advanced analytics',
+      'Custom integrations',
+      '24/7 dedicated support'
     ],
-    cta: 'Coming Soon',
+    cta: 'Contact Sales',
     popular: false
   }
 ]
@@ -88,11 +95,11 @@ export default function Pricing() {
               </ul>
 
               <Link 
-                href={plan.popular ? "/signup" : "#"} 
+                href={plan.popular ? "/signup" : "/signup"} 
                 className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-colors ${
                   plan.popular 
                     ? 'bg-primary-600 hover:bg-primary-700 text-white' 
-                    : 'bg-gray-200 text-gray-500 cursor-not-allowed'
+                    : 'bg-primary-600 hover:bg-primary-700 text-white'
                 }`}
               >
                 {plan.cta}
