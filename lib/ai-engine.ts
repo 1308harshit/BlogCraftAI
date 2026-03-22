@@ -1,6 +1,6 @@
 // Multi-model AI orchestration engine for BlogCraft AI
-import OpenAI from 'openai'
-import Anthropic from '@anthropic-ai/sdk'
+import type OpenAI from 'openai'
+import type Anthropic from '@anthropic-ai/sdk'
 
 export interface AIModel {
   name: string
@@ -39,17 +39,27 @@ export class AIEngine {
   private groqApiKey?: string
 
   constructor() {
-    // Initialize AI clients
+    // Initialize AI clients with dynamic imports
     if (process.env.OPENAI_API_KEY) {
-      this.openai = new OpenAI({
-        apiKey: process.env.OPENAI_API_KEY
-      })
+      try {
+        const OpenAI = require('openai')
+        this.openai = new OpenAI({
+          apiKey: process.env.OPENAI_API_KEY
+        })
+      } catch (error) {
+        console.warn('OpenAI SDK not available')
+      }
     }
 
     if (process.env.ANTHROPIC_API_KEY) {
-      this.anthropic = new Anthropic({
-        apiKey: process.env.ANTHROPIC_API_KEY
-      })
+      try {
+        const Anthropic = require('@anthropic-ai/sdk')
+        this.anthropic = new Anthropic.default({
+          apiKey: process.env.ANTHROPIC_API_KEY
+        })
+      } catch (error) {
+        console.warn('Anthropic SDK not available')
+      }
     }
 
     this.groqApiKey = process.env.GROQ_API_KEY
@@ -451,6 +461,110 @@ This fallback content ensures the system remains functional even when external A
         cost: 0
       }
     }
+  }
+
+  // Simple text generation for platform adaptation (no external API calls)
+  async generateText(prompt: string, options?: { maxTokens?: number; temperature?: number }): Promise<string> {
+    // Try to use available AI services, fallback to simple generation
+    try {
+      if (this.openai) {
+        const response = await this.openai.chat.completions.create({
+          model: 'gpt-3.5-turbo',
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: options?.maxTokens || 500,
+          temperature: options?.temperature || 0.7
+        })
+        return response.choices[0]?.message?.content || this.generateSimpleText(prompt)
+      }
+      
+      if (this.anthropic) {
+        const response = await this.anthropic.messages.create({
+          model: 'claude-3-sonnet-20240229',
+          max_tokens: options?.maxTokens || 500,
+          messages: [{ role: 'user', content: prompt }]
+        })
+        return response.content[0]?.type === 'text' ? response.content[0].text : this.generateSimpleText(prompt)
+      }
+
+      // Fallback to simple generation
+      return this.generateSimpleText(prompt)
+    } catch (error) {
+      console.error('AI text generation failed, using fallback:', error)
+      return this.generateSimpleText(prompt)
+    }
+  }
+
+  // Simple text generation without external APIs (for testing and fallback)
+  private generateSimpleText(prompt: string): string {
+    // Extract key information from prompt
+    const lines = prompt.split('\n')
+    const contentLine = lines.find(l => l.includes('Original Content:'))
+    const titleLine = lines.find(l => l.includes('Title:'))
+    
+    if (contentLine) {
+      const content = contentLine.replace('Original Content:', '').trim()
+      const title = titleLine ? titleLine.replace('Title:', '').trim() : ''
+      
+      // Return adapted content based on platform hints in prompt
+      if (prompt.includes('Twitter')) {
+        return this.adaptForTwitterSimple(content, title)
+      } else if (prompt.includes('LinkedIn')) {
+        return this.adaptForLinkedInSimple(content, title)
+      } else if (prompt.includes('Instagram')) {
+        return this.adaptForInstagramSimple(content, title)
+      } else if (prompt.includes('YouTube')) {
+        return this.adaptForYouTubeSimple(content, title)
+      } else if (prompt.includes('TikTok')) {
+        return this.adaptForTikTokSimple(content, title)
+      } else if (prompt.includes('Medium')) {
+        return this.adaptForMediumSimple(content, title)
+      } else if (prompt.includes('Facebook')) {
+        return this.adaptForFacebookSimple(content, title)
+      } else if (prompt.includes('blog')) {
+        return this.adaptForBlogSimple(content, title)
+      }
+    }
+    
+    return 'Generated content based on your requirements.'
+  }
+
+  private adaptForTwitterSimple(content: string, title: string): string {
+    const text = title || content
+    return text.substring(0, 250) + ' #AI #Tech'
+  }
+
+  private adaptForLinkedInSimple(content: string, title: string): string {
+    return `${title}\n\n${content.substring(0, 500)}\n\nWhat are your thoughts? #Professional #Business`
+  }
+
+  private adaptForInstagramSimple(content: string, title: string): string {
+    return `✨ ${title}\n\n${content.substring(0, 400)}\n\n#Instagram #Content #Engagement`
+  }
+
+  private adaptForYouTubeSimple(content: string, title: string): string {
+    return `${title}\n\n${content}\n\n🔔 Subscribe for more content!\n\n#YouTube #Video`
+  }
+
+  private adaptForTikTokSimple(content: string, title: string): string {
+    return `${title} 🎵\n\n${content.substring(0, 300)}\n\n#TikTok #Viral #Trending`
+  }
+
+  private adaptForMediumSimple(content: string, title: string): string {
+    const intro = `${content}\n\nThis topic deserves deeper exploration and analysis.`
+    const body = `\n\n## Key Insights\n\n${content}\n\nThese insights provide valuable perspective on the subject matter.`
+    const conclusion = `\n\n## Conclusion\n\nIn summary, ${title.toLowerCase()} represents an important area worthy of continued attention and discussion.`
+    return `# ${title}\n\n## Introduction\n\n${intro}${body}${conclusion}`
+  }
+
+  private adaptForFacebookSimple(content: string, title: string): string {
+    return `${title}\n\n${content.substring(0, 500)}\n\nWhat do you think? Let us know in the comments!`
+  }
+
+  private adaptForBlogSimple(content: string, title: string): string {
+    const intro = `${content}\n\nThis comprehensive guide explores the key aspects and implications.`
+    const body = `\n\n## Main Content\n\n${content}\n\nThese points highlight the most important considerations.`
+    const conclusion = `\n\n## Conclusion\n\nTo summarize, ${title.toLowerCase()} offers valuable insights and actionable takeaways for readers.`
+    return `# ${title}\n\n## Introduction\n\n${intro}${body}${conclusion}`
   }
 }
 
