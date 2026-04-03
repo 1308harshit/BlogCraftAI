@@ -1,475 +1,469 @@
-# Platform-Specific Strategy Adaptation Guide
+# Strategy Adapter Guide
 
 ## Overview
 
-The Strategy Adapter is an intelligent system that automatically adjusts content strategies based on performance data and platform algorithm changes. It analyzes performance metrics, identifies optimization opportunities, and generates adapted strategies to maximize engagement, reach, and conversions across all platforms.
+The Strategy Adapter is an intelligent system that automatically adjusts content strategies based on performance data and algorithm changes across all 8 supported platforms. It analyzes performance trends, detects algorithm updates, and provides data-driven recommendations to optimize content performance.
 
 ## Key Features
 
-### 1. Performance-Based Adaptation
-- Analyzes content performance against platform benchmarks
-- Identifies underperforming metrics (engagement, reach, CTR)
-- Generates targeted improvements for specific weaknesses
-
-### 2. Algorithm-Specific Optimization
-- Aligns strategies with each platform's algorithm priorities
-- Adapts to algorithm changes automatically
-- Optimizes for platform-specific ranking factors
-
-### 3. Predictive Impact Analysis
-- Predicts expected improvements from strategy changes
-- Calculates confidence levels for adaptations
-- Estimates time to see results
-
-### 4. A/B Testing Integration
-- Tests strategy adaptations before full implementation
-- Measures statistical significance of improvements
-- Provides clear adopt/reject/continue recommendations
-
-### 5. Algorithm Change Detection
-- Monitors for significant performance shifts
-- Detects potential algorithm updates
-- Suggests adaptation strategies for new algorithm behavior
+- **Performance-Based Adaptation**: Automatically adjusts strategies when content underperforms
+- **Content Fatigue Detection**: Identifies declining engagement and suggests content diversification
+- **Algorithm Change Detection**: Monitors for platform algorithm updates and adapts accordingly
+- **A/B Testing**: Tests strategy adaptations before full implementation
+- **Cross-Platform Optimization**: Coordinates strategy adaptations across all platforms
+- **Impact Prediction**: Forecasts the expected impact of strategy changes
 
 ## Core Concepts
 
-### Strategy Adaptation
-A strategy adaptation represents a complete set of changes to optimize content performance on a specific platform. It includes:
-
-- **Current Strategy**: The baseline strategy being used
-- **Adapted Strategy**: The optimized strategy with improvements
-- **Adaptation Reasons**: Why changes are needed (performance gaps, algorithm alignment)
-- **Expected Impact**: Predicted improvements in engagement, reach, conversions
-- **Confidence**: How confident the system is in the adaptation
-
 ### Adaptation Reasons
-The system identifies adaptation needs based on:
 
-1. **Performance Issues**: Metrics below platform benchmarks
-2. **Algorithm Alignment**: Misalignment with platform priorities
-3. **Audience Behavior**: Changes in audience engagement patterns
-4. **Competition**: Competitive landscape shifts
-5. **Trends**: Emerging content trends and opportunities
+The system identifies six primary reasons for strategy adaptation:
 
-### Platform Benchmarks
-Each platform has established benchmarks for:
-- Engagement Rate (likes, comments, shares per reach)
-- Reach Per Post (average audience reached)
-- Click-Through Rate (clicks per impression)
-- Conversion Rate (conversions per click)
+1. **Underperformance**: Content consistently performs below benchmarks
+2. **Content Fatigue**: Audience engagement declining over time
+3. **Algorithm Change**: Platform algorithm updates affecting performance
+4. **Audience Shift**: Changes in audience behavior or demographics
+5. **Competitive Pressure**: Market changes requiring strategy adjustment
+6. **Seasonal Trend**: Seasonal patterns affecting content performance
+
+### Strategy Components
+
+Each platform strategy includes:
+
+- **Content Types**: Formats to use (text, image, video, etc.)
+- **Posting Frequency**: Optimal number of posts per day/week
+- **Optimal Times**: Best times to post for maximum engagement
+- **Hashtag Strategy**: Hashtag usage approach
+- **Engagement Tactics**: Specific tactics to drive engagement
+- **Performance Goals**: Target metrics for success
 
 ## Usage Examples
 
 ### Basic Strategy Adaptation
 
 ```typescript
-import { strategyAdapter, multiPlatformManager, performanceTracker } from './lib/platform'
+import { strategyAdapter } from '@/lib/platform'
 
-// 1. Get current strategy
-const currentStrategy = await multiPlatformManager.generatePlatformStrategy(
-  'twitter',
-  'user_123'
-)
-
-// 2. Collect performance data
-const performanceData = await performanceTracker.collectPlatformMetrics(
-  'content_456',
-  'twitter',
-  'twitter_content_789'
-)
-
-// 3. Get content history
-const contentHistory = [] // Array of PlatformContent
-
-// 4. Adapt strategy
+// Adapt strategy based on performance data
 const adaptation = await strategyAdapter.adaptStrategy(
-  'user_123',
+  'user123',
   'twitter',
   currentStrategy,
-  performanceData,
+  performanceMetrics,
   contentHistory
 )
 
-console.log('Adaptation Results:', {
-  confidence: adaptation.confidence,
-  expectedEngagementIncrease: adaptation.expectedImpact.engagementIncrease,
-  adaptationReasons: adaptation.adaptationReasons.length
-})
+console.log('Adaptation reason:', adaptation.reason)
+console.log('Confidence:', adaptation.confidence)
+console.log('Expected impact:', adaptation.expectedImpact)
+console.log('Changes:', adaptation.changes)
+
+// Implement adapted strategy
+if (adaptation.confidence > 0.7) {
+  await implementStrategy(adaptation.adaptedStrategy)
+}
 ```
 
 ### Cross-Platform Strategy Adaptation
 
 ```typescript
-// Adapt strategies for all platforms at once
-const crossPlatformMetrics = await performanceTracker.collectCrossPlatformMetrics(
-  'content_456',
+import { strategyAdapter, multiPlatformManager } from '@/lib/platform'
+
+// Get cross-platform metrics
+const metrics = await multiPlatformManager.trackCrossPlatformPerformance(
+  contentId,
   platformContents
 )
 
+// Adapt strategies for all platforms
 const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
-  'user_123',
-  crossPlatformMetrics,
+  'user123',
+  metrics,
   platformContents
 )
 
-// Review adaptations for each platform
-adaptations.forEach((adaptation, platform) => {
-  console.log(`${platform}:`, {
-    confidence: adaptation.confidence,
-    expectedImpact: adaptation.expectedImpact
-  })
-})
+// Review and implement adaptations
+for (const [platform, adaptation] of adaptations) {
+  console.log(`${platform}: ${adaptation.reason}`)
+  console.log(`Expected engagement change: ${adaptation.expectedImpact.engagementChange}%`)
+  
+  if (adaptation.confidence > 0.6) {
+    await implementPlatformStrategy(platform, adaptation.adaptedStrategy)
+  }
+}
 ```
 
-### A/B Testing Strategy Changes
+### A/B Testing Strategy Adaptations
 
 ```typescript
-// Test a strategy adaptation before full implementation
+import { strategyAdapter } from '@/lib/platform'
+
+// Test adapted strategy before full implementation
 const testResult = await strategyAdapter.testStrategyAdaptation(
-  'user_123',
-  'twitter',
+  'user123',
+  'linkedin',
   originalStrategy,
   adaptedStrategy,
-  168 // Test duration in hours (7 days)
+  14 // test duration in days
 )
 
-if (testResult.recommendation === 'adopt') {
-  console.log('Strategy adaptation successful!')
-  console.log(`Performance improvement: ${testResult.performanceImprovement}%`)
-  // Implement the adapted strategy
-} else if (testResult.recommendation === 'reject') {
-  console.log('Strategy adaptation not effective')
-  // Keep original strategy
+console.log('Test winner:', testResult.winner)
+console.log('Improvement:', testResult.improvementPercentage, '%')
+console.log('Statistical significance:', testResult.statisticalSignificance)
+
+// Implement winner
+if (testResult.winner === 'test') {
+  await implementStrategy(testResult.testStrategy)
 } else {
-  console.log('Continue testing - need more data')
-  // Wait for more results
+  await implementStrategy(testResult.originalStrategy)
 }
 ```
 
 ### Algorithm Change Detection
 
 ```typescript
-// Detect potential algorithm changes
+import { strategyAdapter } from '@/lib/platform'
+
+// Detect algorithm changes
 const algorithmUpdate = await strategyAdapter.detectAlgorithmChanges(
-  'twitter',
-  recentPerformance, // Last 5-10 posts
-  historicalPerformance // Previous 20-30 posts
+  'instagram',
+  recentPerformance,
+  historicalPerformance
 )
 
-if (algorithmUpdate && algorithmUpdate.adaptationRequired) {
+if (algorithmUpdate) {
   console.log('Algorithm change detected!')
-  console.log('Suggested changes:', algorithmUpdate.suggestedChanges)
+  console.log('Type:', algorithmUpdate.changeType)
+  console.log('Affected metrics:', algorithmUpdate.affectedMetrics)
+  console.log('Confidence:', algorithmUpdate.confidence)
+  console.log('Recommended actions:', algorithmUpdate.recommendedActions)
   
-  // Automatically trigger strategy re-evaluation
-  const newAdaptation = await strategyAdapter.adaptStrategy(...)
+  // Adapt strategy in response
+  const adaptation = await strategyAdapter.adaptStrategy(
+    'user123',
+    'instagram',
+    currentStrategy,
+    recentPerformance[0],
+    contentHistory
+  )
 }
 ```
 
 ### Generate Adaptation Report
 
 ```typescript
-// Get comprehensive report on strategy adaptations
+import { strategyAdapter } from '@/lib/platform'
+
+// Generate comprehensive report
 const report = await strategyAdapter.generateAdaptationReport(
-  'user_123',
-  'twitter',
+  'user123',
+  'youtube',
   {
     start: new Date('2024-01-01'),
     end: new Date('2024-01-31')
   }
 )
 
-console.log('Adaptation Report:', {
-  platform: report.platform,
-  activeAdaptations: report.adaptations.length,
-  performanceImpact: report.performanceImpact,
-  recommendations: report.recommendations
-})
+console.log('Adaptations made:', report.adaptations.length)
+console.log('Tests conducted:', report.testResults.length)
+console.log('Algorithm updates:', report.algorithmUpdates.length)
+console.log('Overall impact:')
+console.log('  Engagement improvement:', report.overallImpact.engagementImprovement, '%')
+console.log('  Reach improvement:', report.overallImpact.reachImprovement, '%')
+console.log('  Success rate:', report.overallImpact.successRate)
+console.log('Recommendations:', report.recommendations)
 ```
 
-## Integration with Multi-Platform Manager
+## Platform-Specific Adaptations
 
-The Strategy Adapter integrates seamlessly with the Multi-Platform Manager:
+### Twitter/X
 
-```typescript
-import { multiPlatformManager, strategyAdapter } from './lib/platform'
+- Focuses on engagement rate and retweet velocity
+- Adapts thread usage based on performance
+- Optimizes hashtag count (max 2 recommended)
+- Adjusts posting frequency for algorithm favor
 
-// 1. Distribute content across platforms
-const distribution = await multiPlatformManager.distributeContent({
-  userId: 'user_123',
-  contentId: 'content_456',
-  content: 'Your content here',
-  platforms: ['twitter', 'linkedin', 'instagram'],
-  schedule: { scheduleStrategy: 'optimal' }
-})
+### LinkedIn
 
-// 2. Track performance
-const metrics = await multiPlatformManager.trackCrossPlatformPerformance(
-  'content_456',
-  distribution.platformContent
-)
+- Emphasizes professional content and thought leadership
+- Optimizes for dwell time and meaningful interactions
+- Adapts content length based on engagement patterns
+- Focuses on comment quality over quantity
 
-// 3. Adapt strategies based on performance
-const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
-  'user_123',
-  metrics,
-  distribution.platformContent
-)
+### Instagram
 
-// 4. Apply adapted strategies to future content
-adaptations.forEach((adaptation, platform) => {
-  // Use adaptation.adaptedStrategy for next content on this platform
-})
-```
+- Prioritizes visual quality and saves
+- Adapts Reels vs. Posts strategy based on reach
+- Optimizes hashtag strategy (up to 30)
+- Adjusts posting times for maximum visibility
 
-## Platform-Specific Optimization
+### YouTube
 
-### Twitter/X Optimization
-- **Algorithm Priorities**: Engagement, recency, relevance, media
-- **Key Metrics**: Retweets, replies, likes, bookmarks
-- **Optimal Frequency**: 3-15 posts per day
-- **Best Times**: 9am, 12pm, 3pm, 6pm
+- Focuses on watch time and click-through rate
+- Optimizes video length based on retention
+- Adapts thumbnail and title strategies
+- Adjusts upload frequency for algorithm favor
 
-**Adaptation Strategies**:
-- Increase thread usage for longer content
-- Optimize for first-hour engagement
-- Use 1-2 relevant hashtags (not more)
-- Add media to increase visibility
+### TikTok
 
-### LinkedIn Optimization
-- **Algorithm Priorities**: Professional content, engagement, dwell time
-- **Key Metrics**: Comments, shares, profile views
-- **Optimal Frequency**: 1-5 posts per day
-- **Best Times**: 8am, 10am, 12pm, 5pm
+- Emphasizes completion rate and rewatches
+- Adapts to trending sounds and formats
+- Optimizes video length (3-60 seconds)
+- Focuses on first 3 seconds hook
 
-**Adaptation Strategies**:
-- Focus on thought leadership content
-- Encourage meaningful discussions
-- Use professional tone and insights
-- Optimize for longer read times
+### Medium
 
-### Instagram Optimization
-- **Algorithm Priorities**: Engagement, saves, shares, watch time
-- **Key Metrics**: Likes, comments, saves, shares
-- **Optimal Frequency**: 1-3 posts per day
-- **Best Times**: 11am, 1pm, 7pm, 9pm
+- Prioritizes reading time and claps
+- Optimizes article length (7-10 min read time)
+- Adapts headline strategies
+- Focuses on quality over quantity
 
-**Adaptation Strategies**:
-- Create highly visual, aesthetic content
-- Use all 30 hashtags strategically
-- Optimize for saves (valuable content)
-- Leverage Reels for maximum reach
+### Facebook
 
-### YouTube Optimization
-- **Algorithm Priorities**: Watch time, CTR, engagement, session time
-- **Key Metrics**: Views, watch time, likes, comments, subscribers
-- **Optimal Frequency**: 1-7 videos per week
-- **Best Times**: 2pm-6pm, especially Thu-Sun
+- Emphasizes meaningful interactions
+- Adapts video vs. image strategy
+- Optimizes for shares and comments
+- Reduces posting frequency to avoid saturation
 
-**Adaptation Strategies**:
-- Optimize thumbnails and titles for CTR
-- Focus on watch time retention
-- Create series to increase session time
-- Encourage engagement in first 24 hours
+### Blog/Website
 
-### TikTok Optimization
-- **Algorithm Priorities**: Completion rate, rewatches, engagement
-- **Key Metrics**: Views, likes, comments, shares, completion rate
-- **Optimal Frequency**: 1-4 posts per day
-- **Best Times**: 6am, 10am, 7pm, 10pm
-
-**Adaptation Strategies**:
-- Hook viewers in first 3 seconds
-- Optimize for video completion
-- Use trending sounds and effects
-- Create content that encourages rewatches
-
-## Performance Benchmarks
-
-### Engagement Rate Benchmarks
-- Twitter: 3%
-- LinkedIn: 5%
-- Instagram: 4%
-- YouTube: 6%
-- TikTok: 8%
-- Medium: 4%
-- Facebook: 3.5%
-- Blog: 2%
-
-### When to Adapt Strategy
-
-Adapt strategy when:
-1. **Engagement rate < 80% of benchmark** (e.g., Twitter < 2.4%)
-2. **Reach < 70% of expected** (platform-specific)
-3. **CTR < 80% of benchmark**
-4. **Performance drops > 30%** compared to historical average
-5. **Algorithm changes detected** (significant pattern shifts)
+- Focuses on SEO and organic traffic
+- Optimizes content length and structure
+- Adapts keyword strategy
+- Emphasizes backlinks and social shares
 
 ## Best Practices
 
-### 1. Data-Driven Decisions
-- Collect at least 5-10 posts of data before adapting
-- Use statistical significance for A/B tests
-- Monitor adaptations for at least one engagement window
-
-### 2. Gradual Implementation
-- Test adaptations with A/B testing first
-- Implement changes gradually
-- Monitor impact continuously
-
-### 3. Platform-Specific Approach
-- Don't apply same strategy across all platforms
-- Respect each platform's unique algorithm
-- Optimize for platform-specific metrics
-
-### 4. Continuous Monitoring
-- Track performance after adaptations
-- Detect algorithm changes early
-- Re-adapt as needed
-
-### 5. Balance Automation and Control
-- Let system handle routine optimizations
-- Review major strategy changes
-- Override when business needs require it
-
-## API Reference
-
-### StrategyAdapter.adaptStrategy()
-Adapts strategy for a single platform based on performance data.
-
-**Parameters**:
-- `userId`: User identifier
-- `platform`: Target platform
-- `currentStrategy`: Current platform strategy
-- `performanceData`: Recent performance metrics
-- `contentHistory`: Historical content and performance
-
-**Returns**: `StrategyAdaptation` with adapted strategy and impact predictions
-
-### StrategyAdapter.adaptCrossPlatformStrategies()
-Adapts strategies for all platforms simultaneously.
-
-**Parameters**:
-- `userId`: User identifier
-- `crossPlatformMetrics`: Aggregated metrics across platforms
-- `platformContents`: Content published on each platform
-
-**Returns**: `Map<PlatformType, StrategyAdaptation>`
-
-### StrategyAdapter.testStrategyAdaptation()
-Tests a strategy adaptation with A/B testing.
-
-**Parameters**:
-- `userId`: User identifier
-- `platform`: Target platform
-- `originalStrategy`: Baseline strategy
-- `adaptedStrategy`: Strategy to test
-- `testDuration`: Test duration in hours (default: 168)
-
-**Returns**: `StrategyTestResult` with performance comparison
-
-### StrategyAdapter.detectAlgorithmChanges()
-Detects potential algorithm changes based on performance shifts.
-
-**Parameters**:
-- `platform`: Target platform
-- `recentPerformance`: Recent performance data (5-10 posts)
-- `historicalPerformance`: Historical baseline (20-30 posts)
-
-**Returns**: `AlgorithmUpdate | null`
-
-### StrategyAdapter.generateAdaptationReport()
-Generates comprehensive report on strategy adaptations.
-
-**Parameters**:
-- `userId`: User identifier
-- `platform`: Target platform
-- `timeRange`: Date range for report
-
-**Returns**: Adaptation report with performance impact and recommendations
-
-## Troubleshooting
-
-### Low Confidence Adaptations
-**Issue**: Adaptation confidence < 70%
-
-**Solutions**:
-- Collect more performance data (10+ posts)
-- Ensure content history is available
-- Verify performance metrics are accurate
-- Check if platform has sufficient activity
-
-### No Adaptation Needed
-**Issue**: System says no adaptation needed but performance is poor
-
-**Solutions**:
-- Check if benchmarks are appropriate for your audience size
-- Verify performance data is being collected correctly
-- Consider manual strategy review
-- Check for external factors (seasonality, events)
-
-### Adaptation Not Improving Performance
-**Issue**: Implemented adaptation but no improvement
-
-**Solutions**:
-- Wait for full engagement window (24-168 hours)
-- Verify adapted strategy is being applied correctly
-- Check for algorithm changes during test period
-- Consider A/B testing with longer duration
-
-## Advanced Features
-
-### Custom Benchmarks
-Set custom benchmarks for specific use cases:
+### 1. Monitor Continuously
 
 ```typescript
-// Override default benchmarks for enterprise accounts
-const customBenchmarks = {
-  twitter: {
-    engagementRate: 0.05, // 5% instead of 3%
-    reachPerPost: 2000 // Higher reach expectation
+// Set up regular monitoring
+setInterval(async () => {
+  const metrics = await collectPlatformMetrics()
+  const adaptation = await strategyAdapter.adaptStrategy(
+    userId,
+    platform,
+    currentStrategy,
+    metrics,
+    contentHistory
+  )
+  
+  if (adaptation.confidence > 0.8) {
+    await notifyUser(adaptation)
+  }
+}, 24 * 60 * 60 * 1000) // Daily
+```
+
+### 2. Test Before Implementing
+
+Always A/B test significant strategy changes:
+
+```typescript
+if (adaptation.expectedImpact.engagementChange > 20) {
+  // Test first for major changes
+  const testResult = await strategyAdapter.testStrategyAdaptation(
+    userId,
+    platform,
+    currentStrategy,
+    adaptation.adaptedStrategy,
+    7
+  )
+  
+  if (testResult.winner === 'test') {
+    await implementStrategy(adaptation.adaptedStrategy)
+  }
+} else {
+  // Implement directly for minor changes
+  await implementStrategy(adaptation.adaptedStrategy)
+}
+```
+
+### 3. Consider Confidence Levels
+
+```typescript
+if (adaptation.confidence > 0.8) {
+  // High confidence - implement immediately
+  await implementStrategy(adaptation.adaptedStrategy)
+} else if (adaptation.confidence > 0.6) {
+  // Medium confidence - test first
+  await testStrategy(adaptation)
+} else {
+  // Low confidence - gather more data
+  await continueMonitoring()
+}
+```
+
+### 4. Track Adaptation Results
+
+```typescript
+// Track implementation
+await trackAdaptation({
+  userId,
+  platform,
+  adaptationId: adaptation.id,
+  implementedAt: new Date(),
+  originalMetrics: currentMetrics
+})
+
+// Monitor results
+setTimeout(async () => {
+  const newMetrics = await collectMetrics()
+  const actualImpact = calculateImpact(currentMetrics, newMetrics)
+  
+  await updateAdaptationResults({
+    adaptationId: adaptation.id,
+    actualImpact,
+    success: actualImpact.engagementChange > 0
+  })
+}, 7 * 24 * 60 * 60 * 1000) // After 7 days
+```
+
+### 5. Coordinate Cross-Platform
+
+```typescript
+// Adapt all platforms together
+const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
+  userId,
+  crossPlatformMetrics,
+  platformContents
+)
+
+// Implement in order of confidence
+const sortedAdaptations = Array.from(adaptations.values())
+  .sort((a, b) => b.confidence - a.confidence)
+
+for (const adaptation of sortedAdaptations) {
+  if (adaptation.confidence > 0.7) {
+    await implementStrategy(adaptation.adaptedStrategy)
+    await delay(1000) // Stagger implementations
   }
 }
 ```
 
-### Multi-Variant Testing
-Test multiple strategy variations simultaneously:
+## Integration with Other Systems
+
+### With Performance Tracker
 
 ```typescript
-// Test 3 different strategies
-const strategies = [originalStrategy, adaptation1, adaptation2]
-const results = await Promise.all(
-  strategies.map(strategy => 
-    strategyAdapter.testStrategyAdaptation(userId, platform, originalStrategy, strategy)
+import { performanceTracker, strategyAdapter } from '@/lib/platform'
+
+// Collect metrics
+const metrics = await performanceTracker.collectPlatformMetrics(
+  contentId,
+  platform,
+  platformContentId
+)
+
+// Generate insights
+const insights = await performanceTracker.generateInsights(contentId, metrics)
+
+// Adapt strategy based on insights
+if (insights.some(i => i.type === 'warning' || i.type === 'alert')) {
+  const adaptation = await strategyAdapter.adaptStrategy(
+    userId,
+    platform,
+    currentStrategy,
+    metrics,
+    contentHistory
   )
-)
-
-// Choose best performing strategy
-const bestStrategy = results.reduce((best, current) => 
-  current.performanceImprovement > best.performanceImprovement ? current : best
-)
+}
 ```
 
-### Automated Adaptation Pipeline
-Set up fully automated adaptation:
+### With Scheduling Optimizer
 
 ```typescript
-// Run every 7 days
-setInterval(async () => {
-  const platforms = ['twitter', 'linkedin', 'instagram']
-  
-  for (const platform of platforms) {
-    const metrics = await collectMetrics(platform)
-    const adaptation = await strategyAdapter.adaptStrategy(...)
-    
-    if (adaptation.confidence > 0.8) {
-      await implementStrategy(adaptation.adaptedStrategy)
+import { schedulingOptimizer, strategyAdapter } from '@/lib/platform'
+
+// Adapt strategy
+const adaptation = await strategyAdapter.adaptStrategy(
+  userId,
+  platform,
+  currentStrategy,
+  metrics,
+  contentHistory
+)
+
+// Update scheduling based on adapted strategy
+if (adaptation.adaptedStrategy.optimalTimes.length > 0) {
+  await schedulingOptimizer.updateAudiencePattern(
+    userId,
+    platform,
+    {
+      contentId,
+      platform,
+      publishedTime: new Date(),
+      metrics,
+      dayOfWeek: 'Monday',
+      hourOfDay: 10,
+      timezone: 'UTC'
     }
-  }
-}, 7 * 24 * 60 * 60 * 1000)
+  )
+}
 ```
 
-## Conclusion
+### With Multi-Platform Manager
 
-The Strategy Adapter provides intelligent, automated optimization of content strategies across all platforms. By continuously monitoring performance, detecting algorithm changes, and adapting strategies based on data, it ensures your content always performs at its best.
+```typescript
+import { multiPlatformManager, strategyAdapter } from '@/lib/platform'
 
-For more examples, see `strategy-integration-example.ts`.
+// Get performance data
+const report = await multiPlatformManager.generatePerformanceReport(
+  contentId,
+  platformContents,
+  timeRange
+)
+
+// Adapt strategies
+const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
+  userId,
+  report.overallMetrics,
+  platformContents
+)
+
+// Implement adaptations
+for (const [platform, adaptation] of adaptations) {
+  const strategy = await multiPlatformManager.generatePlatformStrategy(
+    platform,
+    userId,
+    adaptation.adaptedStrategy
+  )
+}
+```
+
+## Troubleshooting
+
+### Low Confidence Adaptations
+
+If adaptations consistently have low confidence:
+
+1. Collect more performance data (minimum 20 content pieces)
+2. Ensure metrics are being tracked accurately
+3. Verify content history includes performance data
+4. Check for data quality issues
+
+### Adaptations Not Improving Performance
+
+If adaptations don't improve performance:
+
+1. Review adaptation reasons - may need manual intervention
+2. Check if algorithm changes are being detected
+3. Verify implementation of adapted strategies
+4. Consider A/B testing before full implementation
+5. Analyze competitor strategies for insights
+
+### Algorithm Changes Not Detected
+
+If algorithm changes aren't being detected:
+
+1. Ensure sufficient historical data (minimum 10 data points)
+2. Check recent performance data collection
+3. Verify metrics are being tracked consistently
+3. Increase sensitivity threshold if needed
+
+## API Reference
+
+See the TypeScript interfaces in `lib/platform/strategy-adapter.ts` for complete API documentation.
+
+## Support
+
+For issues or questions about the Strategy Adapter system, please refer to the main platform documentation or contact the development team.

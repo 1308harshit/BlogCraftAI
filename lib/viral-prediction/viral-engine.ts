@@ -393,8 +393,8 @@ export class ViralEngine implements ViralPredictionEngine {
 
   private predictPeakTime(context: ViralContext, timing: TimingFeatures): Date {
     // Viral content typically peaks 6-24 hours after publishing
-    const hoursToP eak = 12 + (timing.optimalTimingScore * 12)
-    return new Date(context.publishTime.getTime() + hoursToP eak * 60 * 60 * 1000)
+    const hoursToPeak = 12 + (timing.optimalTimingScore * 12)
+    return new Date(context.publishTime.getTime() + hoursToPeak * 60 * 60 * 1000)
   }
 
   private generateTimedPredictions(reach: number, shares: number, peakTime: Date): any[] {

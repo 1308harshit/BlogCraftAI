@@ -38,6 +38,8 @@ interface ContentPiece {
     seoScore: number
     viralityScore: number
     estimatedEngagement: number
+    revenueProjection?: number
+    aiOptimizationScore?: number
   }
 }
 
