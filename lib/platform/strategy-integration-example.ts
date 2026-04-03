@@ -1,246 +1,331 @@
-// Strategy Adapter Integration Example
-// Demonstrates how to use platform-specific strategy adaptation
+// Strategy Adapter Integration Examples
+// Demonstrates how to use the Strategy Adapter in real-world scenarios
 
 import {
   strategyAdapter,
   multiPlatformManager,
   performanceTracker,
+  schedulingOptimizer,
   PlatformType,
-  PlatformContent,
-  PerformanceMetrics
+  PlatformStrategy,
+  PerformanceMetrics,
+  PlatformContent
 } from './index'
 
-/**
- * Example 1: Adapt strategy for a single platform based on performance
- */
-export async function adaptPlatformStrategy(
-  userId: string,
-  platform: PlatformType,
-  contentId: string,
-  platformContentId: string
-) {
-  console.log(`\n=== Adapting Strategy for ${platform} ===\n`)
+// Example 1: Basic Strategy Adaptation
+export async function example1_BasicAdaptation() {
+  console.log('=== Example 1: Basic Strategy Adaptation ===\n')
 
-  // Step 1: Get current strategy
-  const currentStrategy = await multiPlatformManager.generatePlatformStrategy(
-    platform,
-    userId
-  )
+  const userId = 'user123'
+  const platform: PlatformType = 'twitter'
+  
+  // Current strategy
+  const currentStrategy: PlatformStrategy = {
+    platform: 'twitter',
+    contentTypes: ['text', 'image'],
+    postingFrequency: 3,
+    optimalTimes: [],
+    hashtagStrategy: ['engagement', 'relevance'],
+    engagementTactics: [
+      'Post during peak hours',
+      'Use platform-specific features'
+    ],
+    performanceGoals: {
+      engagement: 0.03,
+      reach: 5000,
+      clicks: 100
+    }
+  }
 
-  console.log('Current Strategy:', {
-    postingFrequency: currentStrategy.postingFrequency,
-    contentTypes: currentStrategy.contentTypes,
-    engagementTactics: currentStrategy.engagementTactics.slice(0, 3)
-  })
+  // Recent performance metrics (underperforming)
+  const performanceMetrics: PerformanceMetrics = {
+    views: 3000,
+    likes: 50,
+    comments: 10,
+    shares: 5,
+    clicks: 30,
+    engagement: 95,
+    reach: 2500,
+    impressions: 4000,
+    lastUpdated: new Date()
+  }
 
-  // Step 2: Collect performance data
-  const performanceData = await performanceTracker.collectPlatformMetrics(
-    contentId,
-    platform,
-    platformContentId
-  )
-
-  console.log('Performance Metrics:', {
-    engagement: performanceData.engagement,
-    reach: performanceData.reach,
-    clicks: performanceData.clicks
-  })
-
-  // Step 3: Get content history (mock for example)
+  // Content history
   const contentHistory: PlatformContent[] = [
     {
-      contentId: 'content_1',
-      platform,
+      contentId: 'content1',
+      platform: 'twitter',
       adaptedContent: 'Sample content 1',
       format: 'text',
-      metadata: { hashtags: ['example'] },
+      metadata: {},
       status: 'published',
       publishedTime: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
       performanceMetrics: {
-        views: 1000,
-        likes: 50,
-        comments: 10,
-        shares: 5,
-        clicks: 20,
-        engagement: 85,
-        reach: 800,
-        impressions: 1200,
+        views: 5000,
+        likes: 150,
+        comments: 30,
+        shares: 20,
+        clicks: 100,
+        engagement: 300,
+        reach: 4000,
+        impressions: 6000,
         lastUpdated: new Date()
       }
     }
   ]
 
-  // Step 4: Adapt strategy
+  // Adapt strategy
   const adaptation = await strategyAdapter.adaptStrategy(
     userId,
     platform,
     currentStrategy,
-    performanceData,
+    performanceMetrics,
     contentHistory
   )
 
-  console.log('\nStrategy Adaptation Results:')
-  console.log('- Adaptation Reasons:', adaptation.adaptationReasons.length)
-  adaptation.adaptationReasons.forEach((reason) => {
-    console.log(`  • ${reason.description}`)
-  })
-
+  console.log('Adaptation Reason:', adaptation.reason)
+  console.log('Confidence:', (adaptation.confidence * 100).toFixed(1) + '%')
   console.log('\nExpected Impact:')
-  console.log(`- Engagement Increase: ${adaptation.expectedImpact.engagementIncrease.toFixed(1)}%`)
-  console.log(`- Reach Increase: ${adaptation.expectedImpact.reachIncrease.toFixed(1)}%`)
-  console.log(`- Conversion Increase: ${adaptation.expectedImpact.conversionIncrease.toFixed(1)}%`)
-  console.log(`- Time to Impact: ${adaptation.expectedImpact.timeToImpact} hours`)
-  console.log(`- Confidence: ${(adaptation.confidence * 100).toFixed(1)}%`)
-
+  console.log('  Engagement:', adaptation.expectedImpact.engagementChange + '%')
+  console.log('  Reach:', adaptation.expectedImpact.reachChange + '%')
+  console.log('  Time to Impact:', adaptation.expectedImpact.timeToImpact, 'days')
+  console.log('\nChanges:')
+  adaptation.changes.forEach(change => console.log('  -', change))
   console.log('\nAdapted Strategy:')
-  console.log('- Posting Frequency:', adaptation.adaptedStrategy.postingFrequency)
-  console.log('- New Tactics:', adaptation.adaptedStrategy.engagementTactics.slice(0, 5))
-
-  return adaptation
+  console.log('  Posting Frequency:', adaptation.adaptedStrategy.postingFrequency)
+  console.log('  Content Types:', adaptation.adaptedStrategy.contentTypes.join(', '))
+  console.log('  Engagement Tactics:', adaptation.adaptedStrategy.engagementTactics.slice(0, 3).join(', '))
 }
 
-/**
- * Example 2: Adapt strategies across all platforms
- */
-export async function adaptAllPlatformStrategies(
-  userId: string,
-  contentId: string,
-  platformContents: PlatformContent[]
-) {
-  console.log(`\n=== Adapting Strategies Across All Platforms ===\n`)
+// Example 2: Cross-Platform Strategy Adaptation
+export async function example2_CrossPlatformAdaptation() {
+  console.log('\n=== Example 2: Cross-Platform Strategy Adaptation ===\n')
 
-  // Step 1: Collect cross-platform metrics
-  const crossPlatformMetrics = await performanceTracker.collectCrossPlatformMetrics(
+  const userId = 'user123'
+  const contentId = 'content_multi_123'
+  
+  // Platform contents
+  const platformContents: PlatformContent[] = [
+    {
+      contentId,
+      platform: 'twitter',
+      adaptedContent: 'Twitter content',
+      format: 'text',
+      metadata: {},
+      status: 'published',
+      publishedTime: new Date(),
+      performanceMetrics: {
+        views: 10000,
+        likes: 300,
+        comments: 50,
+        shares: 25,
+        clicks: 150,
+        engagement: 525,
+        reach: 8000,
+        impressions: 12000,
+        lastUpdated: new Date()
+      }
+    },
+    {
+      contentId,
+      platform: 'linkedin',
+      adaptedContent: 'LinkedIn content',
+      format: 'article',
+      metadata: {},
+      status: 'published',
+      publishedTime: new Date(),
+      performanceMetrics: {
+        views: 5000,
+        likes: 200,
+        comments: 40,
+        shares: 30,
+        clicks: 100,
+        engagement: 370,
+        reach: 4000,
+        impressions: 6000,
+        lastUpdated: new Date()
+      }
+    },
+    {
+      contentId,
+      platform: 'instagram',
+      adaptedContent: 'Instagram content',
+      format: 'image',
+      metadata: {},
+      status: 'published',
+      publishedTime: new Date(),
+      performanceMetrics: {
+        views: 8000,
+        likes: 400,
+        comments: 60,
+        shares: 20,
+        clicks: 80,
+        engagement: 560,
+        reach: 7000,
+        impressions: 10000,
+        saves: 50,
+        lastUpdated: new Date()
+      }
+    }
+  ]
+
+  // Get cross-platform metrics
+  const crossPlatformMetrics = await multiPlatformManager.trackCrossPlatformPerformance(
     contentId,
     platformContents
   )
 
   console.log('Cross-Platform Performance:')
-  console.log(`- Total Reach: ${crossPlatformMetrics.totalReach}`)
-  console.log(`- Total Engagement: ${crossPlatformMetrics.totalEngagement}`)
-  console.log(`- Best Platform: ${crossPlatformMetrics.bestPerformingPlatform}`)
-  console.log(`- Worst Platform: ${crossPlatformMetrics.worstPerformingPlatform}`)
+  console.log('  Total Reach:', crossPlatformMetrics.totalReach.toLocaleString())
+  console.log('  Total Engagement:', crossPlatformMetrics.totalEngagement.toLocaleString())
+  console.log('  Engagement Rate:', (crossPlatformMetrics.overallEngagementRate * 100).toFixed(2) + '%')
+  console.log('  Best Platform:', crossPlatformMetrics.bestPerformingPlatform)
+  console.log('  Worst Platform:', crossPlatformMetrics.worstPerformingPlatform)
 
-  // Step 2: Adapt strategies for all platforms
+  // Adapt strategies for all platforms
   const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
     userId,
     crossPlatformMetrics,
     platformContents
   )
 
-  console.log(`\nAdapted ${adaptations.size} platform strategies:`)
-  adaptations.forEach((adaptation, platform) => {
-    console.log(`\n${platform}:`)
-    console.log(`- Confidence: ${(adaptation.confidence * 100).toFixed(1)}%`)
-    console.log(`- Expected Engagement Increase: ${adaptation.expectedImpact.engagementIncrease.toFixed(1)}%`)
-    console.log(`- Adaptation Reasons: ${adaptation.adaptationReasons.length}`)
-  })
-
-  return adaptations
+  console.log('\nStrategy Adaptations:')
+  for (const [platform, adaptation] of adaptations) {
+    console.log(`\n${platform.toUpperCase()}:`)
+    console.log('  Reason:', adaptation.reason)
+    console.log('  Confidence:', (adaptation.confidence * 100).toFixed(1) + '%')
+    console.log('  Expected Engagement Change:', adaptation.expectedImpact.engagementChange + '%')
+    console.log('  Key Changes:', adaptation.changes.slice(0, 2).join(', '))
+  }
 }
 
-/**
- * Example 3: Test strategy adaptation with A/B testing
- */
-export async function testStrategyWithABTesting(
-  userId: string,
-  platform: PlatformType
-) {
-  console.log(`\n=== A/B Testing Strategy Adaptation for ${platform} ===\n`)
+// Example 3: A/B Testing Strategy Adaptations
+export async function example3_ABTesting() {
+  console.log('\n=== Example 3: A/B Testing Strategy Adaptations ===\n')
 
-  // Step 1: Get current and adapted strategies
-  const currentStrategy = await multiPlatformManager.generatePlatformStrategy(
-    platform,
-    userId
-  )
+  const userId = 'user123'
+  const platform: PlatformType = 'linkedin'
 
-  // Create a mock adapted strategy
-  const adaptedStrategy = {
-    ...currentStrategy,
-    postingFrequency: currentStrategy.postingFrequency + 2,
+  const originalStrategy: PlatformStrategy = {
+    platform: 'linkedin',
+    contentTypes: ['text', 'article'],
+    postingFrequency: 2,
+    optimalTimes: [],
+    hashtagStrategy: ['professional', 'industry'],
     engagementTactics: [
-      ...currentStrategy.engagementTactics,
-      'Use more interactive elements',
-      'Increase call-to-action frequency'
+      'Share industry insights',
+      'Engage with comments'
+    ],
+    performanceGoals: {
+      engagement: 0.04,
+      reach: 3000,
+      clicks: 80
+    }
+  }
+
+  const adaptedStrategy: PlatformStrategy = {
+    ...originalStrategy,
+    contentTypes: ['text', 'article', 'video'],
+    postingFrequency: 3,
+    engagementTactics: [
+      'Share industry insights',
+      'Engage with comments',
+      'Use video content',
+      'Post thought leadership pieces'
     ]
   }
 
-  console.log('Testing Strategy Changes:')
-  console.log(`- Original Frequency: ${currentStrategy.postingFrequency}`)
-  console.log(`- Adapted Frequency: ${adaptedStrategy.postingFrequency}`)
-  console.log(`- New Tactics: ${adaptedStrategy.engagementTactics.length - currentStrategy.engagementTactics.length}`)
+  console.log('Testing Strategy Adaptation...')
+  console.log('Original Posting Frequency:', originalStrategy.postingFrequency)
+  console.log('Adapted Posting Frequency:', adaptedStrategy.postingFrequency)
+  console.log('New Content Types:', adaptedStrategy.contentTypes.filter(
+    t => !originalStrategy.contentTypes.includes(t)
+  ).join(', '))
 
-  // Step 2: Run A/B test
+  // Run A/B test
   const testResult = await strategyAdapter.testStrategyAdaptation(
     userId,
     platform,
-    currentStrategy,
+    originalStrategy,
     adaptedStrategy,
-    168 // 7 days
+    14 // 14 days
   )
 
-  console.log('\nA/B Test Results:')
-  console.log(`- Performance Improvement: ${testResult.performanceImprovement.toFixed(1)}%`)
-  console.log(`- Statistical Significance: ${(testResult.statisticalSignificance * 100).toFixed(1)}%`)
-  console.log(`- Recommendation: ${testResult.recommendation.toUpperCase()}`)
+  console.log('\nTest Results:')
+  console.log('  Test Duration:', 14, 'days')
+  console.log('  Winner:', testResult.winner.toUpperCase())
+  console.log('  Improvement:', testResult.improvementPercentage.toFixed(2) + '%')
+  console.log('  Statistical Significance:', (testResult.statisticalSignificance * 100).toFixed(1) + '%')
+  
+  console.log('\nOriginal Performance:')
+  console.log('  Engagement:', testResult.originalPerformance.engagement)
+  console.log('  Reach:', testResult.originalPerformance.reach)
+  console.log('  Engagement Rate:', (
+    testResult.originalPerformance.engagement / testResult.originalPerformance.reach * 100
+  ).toFixed(2) + '%')
 
-  if (testResult.recommendation === 'adopt') {
-    console.log('\n✓ Strategy adaptation successful - implementing changes')
-  } else if (testResult.recommendation === 'reject') {
-    console.log('\n✗ Strategy adaptation not effective - reverting to original')
+  console.log('\nTest Performance:')
+  console.log('  Engagement:', testResult.testPerformance.engagement)
+  console.log('  Reach:', testResult.testPerformance.reach)
+  console.log('  Engagement Rate:', (
+    testResult.testPerformance.engagement / testResult.testPerformance.reach * 100
+  ).toFixed(2) + '%')
+
+  if (testResult.winner === 'test') {
+    console.log('\n✓ Recommendation: Implement adapted strategy')
+  } else if (testResult.winner === 'original') {
+    console.log('\n✓ Recommendation: Keep original strategy')
   } else {
-    console.log('\n⏳ Continue testing - need more data for conclusive results')
+    console.log('\n⚠ Recommendation: Continue testing or gather more data')
   }
-
-  return testResult
 }
 
-/**
- * Example 4: Detect and respond to algorithm changes
- */
-export async function detectAndAdaptToAlgorithmChanges(
-  platform: PlatformType,
-  userId: string
-) {
-  console.log(`\n=== Detecting Algorithm Changes for ${platform} ===\n`)
+// Example 4: Algorithm Change Detection
+export async function example4_AlgorithmDetection() {
+  console.log('\n=== Example 4: Algorithm Change Detection ===\n')
 
-  // Mock recent and historical performance data
-  const recentPerformance: PerformanceMetrics[] = [
-    {
-      views: 500,
-      likes: 20,
-      comments: 5,
-      shares: 2,
-      clicks: 10,
-      engagement: 37,
-      reach: 400,
-      impressions: 600,
-      lastUpdated: new Date()
-    },
-    {
-      views: 450,
-      likes: 18,
-      comments: 4,
-      shares: 2,
-      clicks: 9,
-      engagement: 33,
-      reach: 380,
-      impressions: 550,
-      lastUpdated: new Date()
-    }
-  ]
+  const platform: PlatformType = 'instagram'
 
-  const historicalPerformance: PerformanceMetrics[] = Array(10).fill(null).map(() => ({
-    views: 1000,
-    likes: 50,
-    comments: 10,
-    shares: 5,
-    clicks: 20,
-    engagement: 85,
-    reach: 800,
-    impressions: 1200,
-    lastUpdated: new Date()
-  }))
+  // Historical performance (good)
+  const historicalPerformance: PerformanceMetrics[] = []
+  for (let i = 0; i < 15; i++) {
+    historicalPerformance.push({
+      views: 10000 + Math.random() * 2000,
+      likes: 500 + Math.random() * 100,
+      comments: 80 + Math.random() * 20,
+      shares: 40 + Math.random() * 10,
+      clicks: 200 + Math.random() * 50,
+      engagement: 820 + Math.random() * 100,
+      reach: 8000 + Math.random() * 1000,
+      impressions: 12000 + Math.random() * 2000,
+      lastUpdated: new Date(Date.now() - (15 - i) * 24 * 60 * 60 * 1000)
+    })
+  }
+
+  // Recent performance (significantly worse - algorithm change)
+  const recentPerformance: PerformanceMetrics[] = []
+  for (let i = 0; i < 10; i++) {
+    recentPerformance.push({
+      views: 5000 + Math.random() * 1000,
+      likes: 200 + Math.random() * 50,
+      comments: 30 + Math.random() * 10,
+      shares: 15 + Math.random() * 5,
+      clicks: 80 + Math.random() * 20,
+      engagement: 325 + Math.random() * 50,
+      reach: 4000 + Math.random() * 500,
+      impressions: 6000 + Math.random() * 1000,
+      lastUpdated: new Date(Date.now() - (10 - i) * 24 * 60 * 60 * 1000)
+    })
+  }
+
+  console.log('Analyzing Performance Trends...')
+  
+  const historicalAvg = historicalPerformance.reduce((sum, m) => sum + m.engagement, 0) / historicalPerformance.length
+  const recentAvg = recentPerformance.reduce((sum, m) => sum + m.engagement, 0) / recentPerformance.length
+  
+  console.log('Historical Avg Engagement:', historicalAvg.toFixed(0))
+  console.log('Recent Avg Engagement:', recentAvg.toFixed(0))
+  console.log('Change:', ((recentAvg - historicalAvg) / historicalAvg * 100).toFixed(1) + '%')
 
   // Detect algorithm changes
   const algorithmUpdate = await strategyAdapter.detectAlgorithmChanges(
@@ -250,48 +335,34 @@ export async function detectAndAdaptToAlgorithmChanges(
   )
 
   if (algorithmUpdate) {
-    console.log('⚠️  Algorithm Change Detected!')
-    console.log(`- Type: ${algorithmUpdate.updateType}`)
-    console.log(`- Description: ${algorithmUpdate.description}`)
-    console.log(`- Detected At: ${algorithmUpdate.detectedAt.toISOString()}`)
-    console.log(`- Adaptation Required: ${algorithmUpdate.adaptationRequired ? 'YES' : 'NO'}`)
-
-    if (algorithmUpdate.adaptationRequired) {
-      console.log('\nSuggested Changes:')
-      algorithmUpdate.suggestedChanges.forEach((change, index) => {
-        console.log(`${index + 1}. ${change}`)
-      })
-
-      // Automatically adapt strategy
-      console.log('\n🔄 Automatically adapting strategy...')
-      const currentStrategy = await multiPlatformManager.generatePlatformStrategy(
-        platform,
-        userId
-      )
-
-      // In production, this would trigger a full strategy re-evaluation
-      console.log('✓ Strategy adaptation initiated')
-    }
+    console.log('\n🚨 Algorithm Change Detected!')
+    console.log('  Platform:', algorithmUpdate.platform)
+    console.log('  Change Type:', algorithmUpdate.changeType.toUpperCase())
+    console.log('  Confidence:', (algorithmUpdate.confidence * 100).toFixed(1) + '%')
+    console.log('  Affected Metrics:', algorithmUpdate.affectedMetrics.join(', '))
+    console.log('\nRecommended Actions:')
+    algorithmUpdate.recommendedActions.forEach((action, i) => {
+      console.log(`  ${i + 1}. ${action}`)
+    })
   } else {
-    console.log('✓ No significant algorithm changes detected')
+    console.log('\n✓ No significant algorithm changes detected')
   }
-
-  return algorithmUpdate
 }
 
-/**
- * Example 5: Generate comprehensive adaptation report
- */
-export async function generateStrategyAdaptationReport(
-  userId: string,
-  platform: PlatformType
-) {
-  console.log(`\n=== Strategy Adaptation Report for ${platform} ===\n`)
+// Example 5: Comprehensive Adaptation Report
+export async function example5_AdaptationReport() {
+  console.log('\n=== Example 5: Comprehensive Adaptation Report ===\n')
 
+  const userId = 'user123'
+  const platform: PlatformType = 'youtube'
   const timeRange = {
-    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000), // 30 days ago
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
     end: new Date()
   }
+
+  console.log('Generating Adaptation Report...')
+  console.log('Platform:', platform)
+  console.log('Time Range:', timeRange.start.toLocaleDateString(), '-', timeRange.end.toLocaleDateString())
 
   const report = await strategyAdapter.generateAdaptationReport(
     userId,
@@ -299,142 +370,119 @@ export async function generateStrategyAdaptationReport(
     timeRange
   )
 
-  console.log(`Platform: ${report.platform}`)
-  console.log(`Active Adaptations: ${report.adaptations.length}`)
+  console.log('\nReport Summary:')
+  console.log('  Adaptations Made:', report.adaptations.length)
+  console.log('  Tests Conducted:', report.testResults.length)
+  console.log('  Algorithm Updates Detected:', report.algorithmUpdates.length)
 
-  if (report.adaptations.length > 0) {
-    const adaptation = report.adaptations[0]
-    console.log('\nCurrent Adaptation:')
-    console.log(`- Implemented: ${adaptation.implementedAt.toISOString()}`)
-    console.log(`- Confidence: ${(adaptation.confidence * 100).toFixed(1)}%`)
-    console.log(`- Adaptation Reasons: ${adaptation.adaptationReasons.length}`)
+  console.log('\nOverall Impact:')
+  console.log('  Engagement Improvement:', report.overallImpact.engagementImprovement.toFixed(1) + '%')
+  console.log('  Reach Improvement:', report.overallImpact.reachImprovement.toFixed(1) + '%')
+  console.log('  Success Rate:', (report.overallImpact.successRate * 100).toFixed(1) + '%')
 
-    console.log('\nPerformance Impact:')
-    console.log(`- Engagement Change: ${report.performanceImpact.engagementChange.toFixed(1)}%`)
-    console.log(`- Reach Change: ${report.performanceImpact.reachChange.toFixed(1)}%`)
-    console.log(`- Conversion Change: ${report.performanceImpact.conversionChange.toFixed(1)}%`)
-  }
-
-  console.log('\nRecommendations:')
-  report.recommendations.forEach((rec, index) => {
-    console.log(`${index + 1}. ${rec}`)
+  console.log('\nTop Recommendations:')
+  report.recommendations.forEach((rec, i) => {
+    console.log(`  ${i + 1}. ${rec}`)
   })
-
-  return report
 }
 
-/**
- * Example 6: Complete workflow - Monitor, Detect, Adapt
- */
-export async function completeAdaptationWorkflow(
-  userId: string,
-  contentId: string,
-  platform: PlatformType,
-  platformContentId: string
-) {
-  console.log(`\n=== Complete Strategy Adaptation Workflow ===\n`)
+// Example 6: Integration with Performance Tracker
+export async function example6_PerformanceIntegration() {
+  console.log('\n=== Example 6: Integration with Performance Tracker ===\n')
 
-  // Step 1: Monitor performance
-  console.log('Step 1: Monitoring performance...')
-  const performanceData = await performanceTracker.collectPlatformMetrics(
+  const userId = 'user123'
+  const contentId = 'content_456'
+  const platform: PlatformType = 'tiktok'
+  const platformContentId = 'tiktok_content_456'
+
+  // Collect real-time metrics
+  console.log('Collecting Performance Metrics...')
+  const metrics = await performanceTracker.collectPlatformMetrics(
     contentId,
     platform,
     platformContentId
   )
 
-  // Step 2: Generate insights
-  console.log('Step 2: Generating performance insights...')
-  const crossPlatformMetrics = await performanceTracker.collectCrossPlatformMetrics(
+  console.log('Current Performance:')
+  console.log('  Views:', metrics.views.toLocaleString())
+  console.log('  Engagement:', metrics.engagement.toLocaleString())
+  console.log('  Reach:', metrics.reach.toLocaleString())
+  console.log('  Engagement Rate:', (metrics.engagement / metrics.reach * 100).toFixed(2) + '%')
+
+  // Generate insights
+  const crossPlatformMetrics = {
     contentId,
-    [{
-      contentId,
-      platform,
-      adaptedContent: 'Sample content',
-      format: 'text',
-      metadata: {},
-      status: 'published',
-      publishedTime: new Date(),
-      performanceMetrics: performanceData
-    }]
-  )
+    totalReach: metrics.reach,
+    totalEngagement: metrics.engagement,
+    totalClicks: metrics.clicks,
+    platformBreakdown: { [platform]: metrics },
+    bestPerformingPlatform: platform,
+    worstPerformingPlatform: platform,
+    overallEngagementRate: metrics.engagement / metrics.reach,
+    lastUpdated: new Date()
+  }
 
   const insights = await performanceTracker.generateInsights(contentId, crossPlatformMetrics)
-  console.log(`Found ${insights.length} performance insights`)
 
-  // Step 3: Check for algorithm changes
-  console.log('Step 3: Checking for algorithm changes...')
-  // (Would use real historical data in production)
+  console.log('\nPerformance Insights:')
+  insights.slice(0, 3).forEach(insight => {
+    console.log(`  ${insight.type.toUpperCase()}: ${insight.title}`)
+    console.log(`    ${insight.description}`)
+    console.log(`    Recommendation: ${insight.recommendation}`)
+  })
 
-  // Step 4: Adapt strategy if needed
-  console.log('Step 4: Adapting strategy based on insights...')
-  const currentStrategy = await multiPlatformManager.generatePlatformStrategy(
-    platform,
-    userId
-  )
-
-  const adaptation = await strategyAdapter.adaptStrategy(
-    userId,
-    platform,
-    currentStrategy,
-    performanceData,
-    []
-  )
-
-  // Step 5: Test adaptation
-  console.log('Step 5: Testing adapted strategy...')
-  const testResult = await strategyAdapter.testStrategyAdaptation(
-    userId,
-    platform,
-    currentStrategy,
-    adaptation.adaptedStrategy,
-    168
-  )
-
-  // Step 6: Implement if successful
-  if (testResult.recommendation === 'adopt') {
-    console.log('\n✓ Strategy adaptation successful!')
-    console.log('Implementing adapted strategy across all content...')
-  }
-
-  console.log('\n=== Workflow Complete ===')
-
-  return {
-    performanceData,
-    insights,
-    adaptation,
-    testResult
-  }
-}
-
-// Example usage
-if (require.main === module) {
-  const userId = 'user_123'
-  const contentId = 'content_456'
-  const platform: PlatformType = 'twitter'
-  const platformContentId = 'twitter_content_789'
-
-  // Run examples
-  ;(async () => {
-    try {
-      // Example 1: Single platform adaptation
-      await adaptPlatformStrategy(userId, platform, contentId, platformContentId)
-
-      // Example 2: Cross-platform adaptation
-      // await adaptAllPlatformStrategies(userId, contentId, platformContents)
-
-      // Example 3: A/B testing
-      await testStrategyWithABTesting(userId, platform)
-
-      // Example 4: Algorithm change detection
-      await detectAndAdaptToAlgorithmChanges(platform, userId)
-
-      // Example 5: Adaptation report
-      await generateStrategyAdaptationReport(userId, platform)
-
-      // Example 6: Complete workflow
-      // await completeAdaptationWorkflow(userId, contentId, platform, platformContentId)
-    } catch (error) {
-      console.error('Error running examples:', error)
+  // Adapt strategy if needed
+  const needsAdaptation = insights.some(i => i.type === 'warning' || i.type === 'alert')
+  
+  if (needsAdaptation) {
+    console.log('\n⚠ Performance issues detected - adapting strategy...')
+    
+    const currentStrategy: PlatformStrategy = {
+      platform,
+      contentTypes: ['video'],
+      postingFrequency: 2,
+      optimalTimes: [],
+      hashtagStrategy: ['trending', 'viral'],
+      engagementTactics: ['Use trending sounds', 'Hook in first 3 seconds'],
+      performanceGoals: {
+        engagement: 0.05,
+        reach: 10000,
+        clicks: 200
+      }
     }
-  })()
+
+    const adaptation = await strategyAdapter.adaptStrategy(
+      userId,
+      platform,
+      currentStrategy,
+      metrics,
+      []
+    )
+
+    console.log('\nStrategy Adapted:')
+    console.log('  Reason:', adaptation.reason)
+    console.log('  Confidence:', (adaptation.confidence * 100).toFixed(1) + '%')
+    console.log('  Expected Impact:', adaptation.expectedImpact.engagementChange + '% engagement increase')
+  } else {
+    console.log('\n✓ Performance is healthy - no adaptation needed')
+  }
 }
+
+// Run all examples
+export async function runAllExamples() {
+  try {
+    await example1_BasicAdaptation()
+    await example2_CrossPlatformAdaptation()
+    await example3_ABTesting()
+    await example4_AlgorithmDetection()
+    await example5_AdaptationReport()
+    await example6_PerformanceIntegration()
+    
+    console.log('\n=== All Examples Completed Successfully ===\n')
+  } catch (error) {
+    console.error('Error running examples:', error)
+  }
+}
+
+// Uncomment to run examples
+// runAllExamples()

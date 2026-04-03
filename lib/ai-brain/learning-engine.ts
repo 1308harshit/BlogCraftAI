@@ -505,7 +505,7 @@ export class LearningEngine implements ILearningEngine {
         return `Content performance analysis completed (${score}% score) with ${patterns.length} patterns identified`
     }
   }
-}
+
   // Model Update Helper Methods
   private async analyzeInsightsForModelChanges(insights: LearningInsight[]): Promise<ModelChange[]> {
     const changes: ModelChange[] = []
@@ -595,7 +595,7 @@ export class LearningEngine implements ILearningEngine {
       console.error('Failed to apply model updates:', error)
     }
   }
-}
+
   // Strategy Prediction Helper Methods
   private async analyzeHistoricalPerformance(context: ContentContext): Promise<any> {
     // Simulate historical performance analysis
@@ -876,7 +876,7 @@ export class LearningEngine implements ILearningEngine {
       createdAt: new Date()
     }]
   }
-}
+
   // Content Recommendation Helper Methods
   private async generateTopicRecommendations(
     context: ContentContext, 

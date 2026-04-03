@@ -543,6 +543,192 @@ export class MultiPlatformManager {
     
     return await performanceTracker.batchCollectMetrics(contentItems)
   }
+
+  // Adapt strategy based on performance data
+  async adaptPlatformStrategy(
+    userId: string,
+    platform: PlatformType,
+    currentStrategy: PlatformStrategy,
+    performanceData: PerformanceMetrics,
+    contentHistory: PlatformContent[]
+  ) {
+    const { strategyAdapter } = await import('./strategy-adapter')
+    
+    return await strategyAdapter.adaptStrategy(
+      userId,
+      platform,
+      currentStrategy,
+      performanceData,
+      contentHistory
+    )
+  }
+
+  // Adapt strategies across all platforms
+  async adaptCrossPlatformStrategies(
+    userId: string,
+    crossPlatformMetrics: CrossPlatformMetrics,
+    platformContents: PlatformContent[]
+  ) {
+    const { strategyAdapter } = await import('./strategy-adapter')
+    
+    return await strategyAdapter.adaptCrossPlatformStrategies(
+      userId,
+      crossPlatformMetrics,
+      platformContents
+    )
+  }
+
+  // Test strategy adaptation with A/B testing
+  async testStrategyAdaptation(
+    userId: string,
+    platform: PlatformType,
+    originalStrategy: PlatformStrategy,
+    adaptedStrategy: PlatformStrategy,
+    testDuration?: number
+  ) {
+    const { strategyAdapter } = await import('./strategy-adapter')
+    
+    return await strategyAdapter.testStrategyAdaptation(
+      userId,
+      platform,
+      originalStrategy,
+      adaptedStrategy,
+      testDuration
+    )
+  }
+
+  // Detect algorithm changes on a platform
+  async detectAlgorithmChanges(
+    platform: PlatformType,
+    recentPerformance: PerformanceMetrics[],
+    historicalPerformance: PerformanceMetrics[]
+  ) {
+    const { strategyAdapter } = await import('./strategy-adapter')
+    
+    return await strategyAdapter.detectAlgorithmChanges(
+      platform,
+      recentPerformance,
+      historicalPerformance
+    )
+  }
+
+  // Generate strategy adaptation report
+  async generateStrategyAdaptationReport(
+    userId: string,
+    platform: PlatformType,
+    timeRange: { start: Date; end: Date }
+  ) {
+    const { strategyAdapter } = await import('./strategy-adapter')
+    
+    return await strategyAdapter.generateAdaptationReport(
+      userId,
+      platform,
+      timeRange
+    )
+  }
+
+  // Automated engagement methods
+  async processEngagement(
+    platform: PlatformType,
+    triggerType: string,
+    context: any
+  ) {
+    const { engagementAutomation } = await import('./engagement-automation')
+    
+    return await engagementAutomation.processEngagement(
+      platform,
+      triggerType,
+      context
+    )
+  }
+
+  async detectViralContent(
+    contentId: string,
+    platform: PlatformType,
+    metrics: PerformanceMetrics,
+    historicalAverage: PerformanceMetrics
+  ) {
+    const { engagementAutomation } = await import('./engagement-automation')
+    
+    return await engagementAutomation.detectViralContent(
+      contentId,
+      platform,
+      metrics,
+      historicalAverage
+    )
+  }
+
+  async amplifyViralContent(contentId: string, userId: string) {
+    const { engagementAutomation } = await import('./engagement-automation')
+    
+    return await engagementAutomation.amplifyViralContent(contentId, userId)
+  }
+
+  async getEngagementMetrics(
+    platform: PlatformType,
+    timeRange: { start: Date; end: Date }
+  ) {
+    const { engagementAutomation } = await import('./engagement-automation')
+    
+    return await engagementAutomation.getEngagementMetrics(platform, timeRange)
+  }
+
+  async createEngagementRules(
+    userId: string,
+    platform: PlatformType,
+    brandVoice: any
+  ) {
+    const { engagementAutomation } = await import('./engagement-automation')
+    
+    return await engagementAutomation.createDefaultRules(userId, platform, brandVoice)
+  }
+
+  // Viral amplification methods
+  async detectViralPotential(
+    contentId: string,
+    platform: PlatformType,
+    currentMetrics: PerformanceMetrics,
+    timeElapsed: number
+  ) {
+    const { viralAmplification } = await import('./viral-amplification')
+    
+    return await viralAmplification.detectViralPotential(
+      contentId,
+      platform,
+      currentMetrics,
+      timeElapsed
+    )
+  }
+
+  async executeAmplification(
+    viralContent: any,
+    userId: string,
+    budget?: number
+  ) {
+    const { viralAmplification } = await import('./viral-amplification')
+    
+    return await viralAmplification.executeAmplification(
+      viralContent,
+      userId,
+      budget
+    )
+  }
+
+  async predictViralPotential(
+    content: string,
+    platform: PlatformType,
+    format: string
+  ) {
+    const { viralAmplification } = await import('./viral-amplification')
+    
+    return await viralAmplification.predictViralPotential(content, platform, format)
+  }
+
+  async generateAmplificationReport(timeRange: { start: Date; end: Date }) {
+    const { viralAmplification } = await import('./viral-amplification')
+    
+    return await viralAmplification.generateAmplificationReport(timeRange)
+  }
 }
 
 export const multiPlatformManager = MultiPlatformManager.getInstance()

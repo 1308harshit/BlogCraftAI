@@ -9,6 +9,8 @@ export { MultiPlatformManager, multiPlatformManager } from './multi-platform-man
 export { SchedulingOptimizer, schedulingOptimizer } from './scheduling-optimizer'
 export { PerformanceTracker, performanceTracker } from './performance-tracker'
 export { StrategyAdapter, strategyAdapter } from './strategy-adapter'
+export { EngagementAutomation, engagementAutomation } from './engagement-automation'
+export { ViralAmplification, viralAmplification } from './viral-amplification'
 export type {
   AudienceActivityPattern,
   SchedulingRecommendation,
@@ -31,6 +33,20 @@ export type {
   StrategyTestResult,
   AlgorithmUpdate
 } from './strategy-adapter'
+export type {
+  EngagementRule,
+  EngagementCondition,
+  EngagementAction,
+  BrandVoiceProfile,
+  ViralContent,
+  AmplificationStrategy,
+  EngagementMetrics
+} from './engagement-automation'
+export type {
+  ViralDetectionConfig,
+  AmplificationResult,
+  ViralPattern
+} from './viral-amplification'
 
 // Main API class for easy access
 export class PlatformAPI {
