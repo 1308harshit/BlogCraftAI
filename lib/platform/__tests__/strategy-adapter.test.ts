@@ -1,322 +1,333 @@
-// Strategy Adapter Unit Tests
-// Tests for platform-specific strategy adaptation functionality
+// Strategy Adapter Tests
+// Comprehensive test suite for platform-specific strategy adaptation
 
 import { strategyAdapter } from '../strategy-adapter'
 import {
   PlatformType,
   PlatformStrategy,
   PerformanceMetrics,
-  PlatformContent
+  PlatformContent,
+  CrossPlatformMetrics
 } from '../types'
 
 describe('StrategyAdapter', () => {
-  const userId = 'test_user_123'
-  const platform: PlatformType = 'twitter'
+  // Helper function to create mock performance metrics
+  const createMockMetrics = (overrides?: Partial<PerformanceMetrics>): PerformanceMetrics => ({
+    views: 10000,
+    likes: 300,
+    comments: 50,
+    shares: 25,
+    clicks: 150,
+    engagement: 525,
+    reach: 8000,
+    impressions: 12000,
+    lastUpdated: new Date(),
+    ...overrides
+  })
 
-  const mockCurrentStrategy: PlatformStrategy = {
-    platform: 'twitter',
+  // Helper function to create mock strategy
+  const createMockStrategy = (platform: PlatformType): PlatformStrategy => ({
+    platform,
     contentTypes: ['text', 'image'],
-    postingFrequency: 5,
-    optimalTimes: [new Date()],
-    hashtagStrategy: ['trending', 'relevant'],
+    postingFrequency: 3,
+    optimalTimes: [],
+    hashtagStrategy: ['engagement', 'relevance'],
     engagementTactics: [
       'Post during peak hours',
       'Use platform-specific features'
     ],
     performanceGoals: {
       engagement: 0.03,
-      reach: 500,
-      clicks: 10
+      reach: 5000,
+      clicks: 100
     }
-  }
+  })
 
-  const mockPerformanceData: PerformanceMetrics = {
-    views: 300,
-    likes: 5,
-    comments: 1,
-    shares: 0,
-    clicks: 3,
-    engagement: 9,
-    reach: 250,
-    impressions: 400,
-    lastUpdated: new Date()
-  }
-
-  const mockContentHistory: PlatformContent[] = [
-    {
-      contentId: 'content_1',
-      platform: 'twitter',
-      adaptedContent: 'Test content 1',
-      format: 'text',
-      metadata: { hashtags: ['test'] },
-      status: 'published',
-      publishedTime: new Date(Date.now() - 24 * 60 * 60 * 1000),
-      performanceMetrics: {
-        views: 500,
-        likes: 25,
-        comments: 5,
-        shares: 3,
-        clicks: 10,
-        engagement: 43,
-        reach: 400,
-        impressions: 600,
-        lastUpdated: new Date()
-      }
-    },
-    {
-      contentId: 'content_2',
-      platform: 'twitter',
-      adaptedContent: 'Test content 2',
-      format: 'text',
-      metadata: { hashtags: ['test'] },
-      status: 'published',
-      publishedTime: new Date(Date.now() - 48 * 60 * 60 * 1000),
-      performanceMetrics: {
-        views: 450,
-        likes: 20,
-        comments: 4,
-        shares: 2,
-        clicks: 8,
-        engagement: 34,
-        reach: 380,
-        impressions: 550,
-        lastUpdated: new Date()
-      }
-    }
-  ]
+  // Helper function to create mock content
+  const createMockContent = (
+    platform: PlatformType,
+    metrics?: PerformanceMetrics
+  ): PlatformContent => ({
+    contentId: `content_${Date.now()}`,
+    platform,
+    adaptedContent: 'Test content',
+    format: 'text',
+    metadata: {},
+    status: 'published',
+    publishedTime: new Date(),
+    performanceMetrics: metrics || createMockMetrics()
+  })
 
   describe('adaptStrategy', () => {
-    it('should generate strategy adaptation with valid structure', async () => {
+    it('should adapt strategy for underperforming content', async () => {
+      const platform: PlatformType = 'twitter'
+      const currentStrategy = createMockStrategy(platform)
+      const poorMetrics = createMockMetrics({
+        engagement: 50,
+        reach: 8000,
+        views: 1000
+      })
+      const contentHistory = [
+        createMockContent(platform, createMockMetrics({ engagement: 500 })),
+        createMockContent(platform, createMockMetrics({ engagement: 480 })),
+        createMockContent(platform, poorMetrics)
+      ]
+
       const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
+        'user123',
         platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        mockContentHistory
+        currentStrategy,
+        poorMetrics,
+        contentHistory
       )
 
       expect(adaptation).toBeDefined()
       expect(adaptation.platform).toBe(platform)
-      expect(adaptation.currentStrategy).toBeDefined()
-      expect(adaptation.adaptedStrategy).toBeDefined()
-      expect(adaptation.adaptationReasons).toBeInstanceOf(Array)
-      expect(adaptation.expectedImpact).toBeDefined()
+      expect(adaptation.reason).toBe('underperformance')
       expect(adaptation.confidence).toBeGreaterThan(0)
       expect(adaptation.confidence).toBeLessThanOrEqual(1)
-      expect(adaptation.implementedAt).toBeInstanceOf(Date)
+      expect(adaptation.changes.length).toBeGreaterThan(0)
+      expect(adaptation.expectedImpact).toBeDefined()
+      expect(adaptation.adaptedStrategy).toBeDefined()
     })
 
-    it('should identify performance issues when metrics are below benchmarks', async () => {
-      const lowPerformanceData: PerformanceMetrics = {
-        views: 100,
-        likes: 2,
-        comments: 0,
-        shares: 0,
-        clicks: 1,
-        engagement: 3,
-        reach: 80,
-        impressions: 150,
-        lastUpdated: new Date()
+    it('should detect content fatigue and adapt accordingly', async () => {
+      const platform: PlatformType = 'linkedin'
+      const currentStrategy = createMockStrategy(platform)
+      
+      // Create declining performance history
+      const contentHistory: PlatformContent[] = []
+      for (let i = 0; i < 20; i++) {
+        const engagement = i < 10 ? 600 - i * 10 : 400 - (i - 10) * 20
+        contentHistory.push(
+          createMockContent(platform, createMockMetrics({ engagement }))
+        )
+      }
+
+      const currentMetrics = createMockMetrics({ engagement: 200 })
+
+      const adaptation = await strategyAdapter.adaptStrategy(
+        'user123',
+        platform,
+        currentStrategy,
+        currentMetrics,
+        contentHistory
+      )
+
+      expect(adaptation.reason).toBe('content_fatigue')
+      expect(adaptation.adaptedStrategy.contentTypes.length).toBeGreaterThan(
+        currentStrategy.contentTypes.length
+      )
+      expect(adaptation.changes.some(change => change.includes('content types'))).toBe(true)
+    })
+
+    it('should provide high confidence with sufficient data', async () => {
+      const platform: PlatformType = 'instagram'
+      const currentStrategy = createMockStrategy(platform)
+      const metrics = createMockMetrics()
+      
+      // Create large content history
+      const contentHistory: PlatformContent[] = []
+      for (let i = 0; i < 60; i++) {
+        contentHistory.push(createMockContent(platform))
       }
 
       const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
+        'user123',
         platform,
-        mockCurrentStrategy,
-        lowPerformanceData,
-        mockContentHistory
+        currentStrategy,
+        metrics,
+        contentHistory
       )
 
-      expect(adaptation.adaptationReasons.length).toBeGreaterThan(0)
-      
-      const performanceReasons = adaptation.adaptationReasons.filter(
-        r => r.type === 'performance'
-      )
-      expect(performanceReasons.length).toBeGreaterThan(0)
-    })
-
-    it('should include algorithm-specific adaptations', async () => {
-      const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        mockContentHistory
-      )
-
-      const algorithmReasons = adaptation.adaptationReasons.filter(
-        r => r.type === 'algorithm'
-      )
-      expect(algorithmReasons.length).toBeGreaterThan(0)
+      expect(adaptation.confidence).toBeGreaterThan(0.6)
     })
 
     it('should predict positive impact for adaptations', async () => {
+      const platform: PlatformType = 'youtube'
+      const currentStrategy = createMockStrategy(platform)
+      const metrics = createMockMetrics({ engagement: 100 })
+      const contentHistory = [createMockContent(platform, metrics)]
+
       const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
+        'user123',
         platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        mockContentHistory
+        currentStrategy,
+        metrics,
+        contentHistory
       )
 
-      expect(adaptation.expectedImpact.engagementIncrease).toBeGreaterThanOrEqual(0)
-      expect(adaptation.expectedImpact.reachIncrease).toBeGreaterThanOrEqual(0)
-      expect(adaptation.expectedImpact.conversionIncrease).toBeGreaterThanOrEqual(0)
-      expect(adaptation.expectedImpact.timeToImpact).toBeGreaterThan(0)
+      expect(adaptation.expectedImpact.engagementChange).toBeGreaterThanOrEqual(0)
+      expect(adaptation.expectedImpact.reachChange).toBeGreaterThanOrEqual(0)
       expect(adaptation.expectedImpact.confidence).toBeGreaterThan(0)
-      expect(adaptation.expectedImpact.confidence).toBeLessThanOrEqual(1)
+      expect(adaptation.expectedImpact.timeToImpact).toBeGreaterThan(0)
     })
 
-    it('should increase confidence with more content history', async () => {
-      const shortHistory = mockContentHistory.slice(0, 1)
-      const longHistory = [...mockContentHistory, ...mockContentHistory, ...mockContentHistory]
+    it('should identify specific changes between strategies', async () => {
+      const platform: PlatformType = 'tiktok'
+      const currentStrategy = createMockStrategy(platform)
+      const metrics = createMockMetrics({ engagement: 50 })
+      const contentHistory = [createMockContent(platform, metrics)]
 
-      const adaptationShort = await strategyAdapter.adaptStrategy(
-        userId,
+      const adaptation = await strategyAdapter.adaptStrategy(
+        'user123',
         platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        shortHistory
+        currentStrategy,
+        metrics,
+        contentHistory
       )
 
-      const adaptationLong = await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        longHistory
-      )
-
-      expect(adaptationLong.confidence).toBeGreaterThanOrEqual(adaptationShort.confidence)
+      expect(adaptation.changes).toBeDefined()
+      expect(Array.isArray(adaptation.changes)).toBe(true)
+      expect(adaptation.changes.length).toBeGreaterThan(0)
     })
+  })
 
-    it('should adapt posting frequency when below optimal', async () => {
-      const lowFrequencyStrategy = {
-        ...mockCurrentStrategy,
-        postingFrequency: 1 // Below Twitter optimal (3-15)
+  describe('adaptCrossPlatformStrategies', () => {
+    it('should adapt strategies for multiple platforms', async () => {
+      const platforms: PlatformType[] = ['twitter', 'linkedin', 'instagram']
+      const platformContents: PlatformContent[] = platforms.map(p =>
+        createMockContent(p)
+      )
+
+      const crossPlatformMetrics: CrossPlatformMetrics = {
+        contentId: 'content123',
+        totalReach: 24000,
+        totalEngagement: 1575,
+        totalClicks: 450,
+        platformBreakdown: {
+          twitter: createMockMetrics(),
+          linkedin: createMockMetrics(),
+          instagram: createMockMetrics()
+        },
+        bestPerformingPlatform: 'twitter',
+        worstPerformingPlatform: 'instagram',
+        overallEngagementRate: 0.065,
+        lastUpdated: new Date()
       }
 
-      const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        lowFrequencyStrategy,
-        mockPerformanceData,
-        mockContentHistory
+      const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
+        'user123',
+        crossPlatformMetrics,
+        platformContents
       )
 
-      expect(adaptation.adaptedStrategy.postingFrequency).toBeGreaterThan(
-        lowFrequencyStrategy.postingFrequency
-      )
+      expect(adaptations.size).toBe(platforms.length)
+      platforms.forEach(platform => {
+        expect(adaptations.has(platform)).toBe(true)
+        const adaptation = adaptations.get(platform)!
+        expect(adaptation.platform).toBe(platform)
+        expect(adaptation.adaptedStrategy).toBeDefined()
+      })
     })
 
-    it('should add engagement tactics to adapted strategy', async () => {
-      const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        mockContentHistory
+    it('should handle empty platform contents gracefully', async () => {
+      const crossPlatformMetrics: CrossPlatformMetrics = {
+        contentId: 'content123',
+        totalReach: 0,
+        totalEngagement: 0,
+        totalClicks: 0,
+        platformBreakdown: {},
+        bestPerformingPlatform: 'twitter',
+        worstPerformingPlatform: 'twitter',
+        overallEngagementRate: 0,
+        lastUpdated: new Date()
+      }
+
+      const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
+        'user123',
+        crossPlatformMetrics,
+        []
       )
 
-      expect(adaptation.adaptedStrategy.engagementTactics.length).toBeGreaterThanOrEqual(
-        mockCurrentStrategy.engagementTactics.length
-      )
-    })
-
-    it('should optimize posting times based on content history', async () => {
-      const historyWithTimes = mockContentHistory.map((content, index) => ({
-        ...content,
-        publishedTime: new Date(Date.now() - (index + 1) * 24 * 60 * 60 * 1000)
-      }))
-
-      const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        historyWithTimes
-      )
-
-      expect(adaptation.adaptedStrategy.optimalTimes).toBeDefined()
-      expect(adaptation.adaptedStrategy.optimalTimes.length).toBeGreaterThan(0)
+      expect(adaptations.size).toBe(0)
     })
   })
 
   describe('testStrategyAdaptation', () => {
-    it('should return valid test results', async () => {
+    it('should create A/B test for strategy adaptation', async () => {
+      const platform: PlatformType = 'facebook'
+      const originalStrategy = createMockStrategy(platform)
       const adaptedStrategy = {
-        ...mockCurrentStrategy,
-        postingFrequency: mockCurrentStrategy.postingFrequency + 2
+        ...originalStrategy,
+        postingFrequency: 5,
+        contentTypes: ['text', 'image', 'video']
       }
 
       const testResult = await strategyAdapter.testStrategyAdaptation(
-        userId,
+        'user123',
         platform,
-        mockCurrentStrategy,
+        originalStrategy,
         adaptedStrategy,
-        168
+        14
       )
 
       expect(testResult).toBeDefined()
-      expect(testResult.strategyId).toBeDefined()
       expect(testResult.platform).toBe(platform)
-      expect(testResult.testDuration).toBe(168)
-      expect(testResult.performanceImprovement).toBeGreaterThanOrEqual(0)
+      expect(testResult.testId).toBeDefined()
+      expect(testResult.originalStrategy).toEqual(originalStrategy)
+      expect(testResult.testStrategy).toEqual(adaptedStrategy)
+      expect(testResult.startDate).toBeInstanceOf(Date)
+      expect(testResult.endDate).toBeInstanceOf(Date)
+      expect(testResult.winner).toMatch(/original|test|inconclusive/)
       expect(testResult.statisticalSignificance).toBeGreaterThan(0)
-      expect(testResult.statisticalSignificance).toBeLessThanOrEqual(1)
-      expect(['adopt', 'reject', 'continue_testing']).toContain(testResult.recommendation)
     })
 
-    it('should recommend adoption for high improvement and significance', async () => {
-      const adaptedStrategy = {
-        ...mockCurrentStrategy,
-        postingFrequency: mockCurrentStrategy.postingFrequency + 5
-      }
+    it('should use default test duration if not specified', async () => {
+      const platform: PlatformType = 'medium'
+      const originalStrategy = createMockStrategy(platform)
+      const adaptedStrategy = { ...originalStrategy, postingFrequency: 4 }
 
-      // Run multiple tests to increase chance of high performance
-      const tests = await Promise.all(
-        Array(5).fill(null).map(() =>
-          strategyAdapter.testStrategyAdaptation(
-            userId,
-            platform,
-            mockCurrentStrategy,
-            adaptedStrategy,
-            168
-          )
-        )
+      const testResult = await strategyAdapter.testStrategyAdaptation(
+        'user123',
+        platform,
+        originalStrategy,
+        adaptedStrategy
       )
 
-      const adoptRecommendations = tests.filter(t => t.recommendation === 'adopt')
-      // At least some tests should recommend adoption
-      expect(adoptRecommendations.length).toBeGreaterThanOrEqual(0)
+      const durationDays = Math.round(
+        (testResult.endDate.getTime() - testResult.startDate.getTime()) /
+          (24 * 60 * 60 * 1000)
+      )
+      expect(durationDays).toBe(14)
+    })
+
+    it('should calculate improvement percentage', async () => {
+      const platform: PlatformType = 'blog'
+      const originalStrategy = createMockStrategy(platform)
+      const adaptedStrategy = { ...originalStrategy, postingFrequency: 6 }
+
+      const testResult = await strategyAdapter.testStrategyAdaptation(
+        'user123',
+        platform,
+        originalStrategy,
+        adaptedStrategy
+      )
+
+      expect(typeof testResult.improvementPercentage).toBe('number')
+      expect(testResult.improvementPercentage).not.toBeNaN()
     })
   })
 
   describe('detectAlgorithmChanges', () => {
-    it('should detect significant performance drops', async () => {
-      const recentPerformance: PerformanceMetrics[] = Array(5).fill(null).map(() => ({
-        views: 200,
-        likes: 5,
-        comments: 1,
-        shares: 0,
-        clicks: 2,
-        engagement: 8,
-        reach: 150,
-        impressions: 250,
-        lastUpdated: new Date()
-      }))
+    it('should detect significant algorithm changes', async () => {
+      const platform: PlatformType = 'twitter'
+      
+      // Historical performance (good)
+      const historicalPerformance: PerformanceMetrics[] = []
+      for (let i = 0; i < 15; i++) {
+        historicalPerformance.push(
+          createMockMetrics({ engagement: 500, reach: 8000 })
+        )
+      }
 
-      const historicalPerformance: PerformanceMetrics[] = Array(10).fill(null).map(() => ({
-        views: 1000,
-        likes: 50,
-        comments: 10,
-        shares: 5,
-        clicks: 20,
-        engagement: 85,
-        reach: 800,
-        impressions: 1200,
-        lastUpdated: new Date()
-      }))
+      // Recent performance (significantly worse)
+      const recentPerformance: PerformanceMetrics[] = []
+      for (let i = 0; i < 10; i++) {
+        recentPerformance.push(
+          createMockMetrics({ engagement: 200, reach: 4000 })
+        )
+      }
 
       const algorithmUpdate = await strategyAdapter.detectAlgorithmChanges(
         platform,
@@ -325,40 +336,26 @@ describe('StrategyAdapter', () => {
       )
 
       expect(algorithmUpdate).toBeDefined()
-      expect(algorithmUpdate?.platform).toBe(platform)
-      expect(algorithmUpdate?.updateType).toBeDefined()
-      expect(algorithmUpdate?.description).toBeDefined()
-      expect(algorithmUpdate?.detectedAt).toBeInstanceOf(Date)
-      expect(algorithmUpdate?.adaptationRequired).toBe(true)
-      expect(algorithmUpdate?.suggestedChanges).toBeInstanceOf(Array)
-      expect(algorithmUpdate?.suggestedChanges.length).toBeGreaterThan(0)
+      expect(algorithmUpdate!.platform).toBe(platform)
+      expect(algorithmUpdate!.changeType).toMatch(/major|minor|suspected/)
+      expect(algorithmUpdate!.affectedMetrics.length).toBeGreaterThan(0)
+      expect(algorithmUpdate!.confidence).toBeGreaterThan(0)
+      expect(algorithmUpdate!.recommendedActions.length).toBeGreaterThan(0)
     })
 
     it('should return null when no significant changes detected', async () => {
-      const stablePerformance: PerformanceMetrics[] = Array(5).fill(null).map(() => ({
-        views: 500,
-        likes: 25,
-        comments: 5,
-        shares: 3,
-        clicks: 10,
-        engagement: 43,
-        reach: 400,
-        impressions: 600,
-        lastUpdated: new Date()
-      }))
+      const platform: PlatformType = 'linkedin'
+      
+      // Consistent performance
+      const historicalPerformance: PerformanceMetrics[] = []
+      for (let i = 0; i < 15; i++) {
+        historicalPerformance.push(createMockMetrics())
+      }
 
-      const algorithmUpdate = await strategyAdapter.detectAlgorithmChanges(
-        platform,
-        stablePerformance,
-        stablePerformance
-      )
-
-      expect(algorithmUpdate).toBeNull()
-    })
-
-    it('should return null with insufficient data', async () => {
-      const recentPerformance: PerformanceMetrics[] = [mockPerformanceData]
-      const historicalPerformance: PerformanceMetrics[] = [mockPerformanceData]
+      const recentPerformance: PerformanceMetrics[] = []
+      for (let i = 0; i < 10; i++) {
+        recentPerformance.push(createMockMetrics())
+      }
 
       const algorithmUpdate = await strategyAdapter.detectAlgorithmChanges(
         platform,
@@ -368,170 +365,178 @@ describe('StrategyAdapter', () => {
 
       expect(algorithmUpdate).toBeNull()
     })
+
+    it('should return null with insufficient data', async () => {
+      const platform: PlatformType = 'instagram'
+      const recentPerformance = [createMockMetrics()]
+      const historicalPerformance = [createMockMetrics()]
+
+      const algorithmUpdate = await strategyAdapter.detectAlgorithmChanges(
+        platform,
+        recentPerformance,
+        historicalPerformance
+      )
+
+      expect(algorithmUpdate).toBeNull()
+    })
+
+    it('should identify affected metrics correctly', async () => {
+      const platform: PlatformType = 'youtube'
+      
+      const historicalPerformance: PerformanceMetrics[] = []
+      for (let i = 0; i < 15; i++) {
+        historicalPerformance.push(
+          createMockMetrics({ views: 10000, engagement: 500 })
+        )
+      }
+
+      const recentPerformance: PerformanceMetrics[] = []
+      for (let i = 0; i < 10; i++) {
+        recentPerformance.push(
+          createMockMetrics({ views: 5000, engagement: 500 })
+        )
+      }
+
+      const algorithmUpdate = await strategyAdapter.detectAlgorithmChanges(
+        platform,
+        recentPerformance,
+        historicalPerformance
+      )
+
+      expect(algorithmUpdate).toBeDefined()
+      expect(algorithmUpdate!.affectedMetrics).toContain('views')
+    })
   })
 
   describe('generateAdaptationReport', () => {
-    it('should generate report with valid structure', async () => {
-      // First create an adaptation
-      await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        mockContentHistory
-      )
-
+    it('should generate comprehensive adaptation report', async () => {
+      const platform: PlatformType = 'tiktok'
       const timeRange = {
         start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
         end: new Date()
       }
 
       const report = await strategyAdapter.generateAdaptationReport(
-        userId,
+        'user123',
         platform,
         timeRange
       )
 
       expect(report).toBeDefined()
       expect(report.platform).toBe(platform)
-      expect(report.adaptations).toBeInstanceOf(Array)
-      expect(report.performanceImpact).toBeDefined()
-      expect(report.performanceImpact.engagementChange).toBeDefined()
-      expect(report.performanceImpact.reachChange).toBeDefined()
-      expect(report.performanceImpact.conversionChange).toBeDefined()
-      expect(report.recommendations).toBeInstanceOf(Array)
-      expect(report.recommendations.length).toBeGreaterThan(0)
+      expect(report.timeRange).toEqual(timeRange)
+      expect(report.adaptations).toBeDefined()
+      expect(report.testResults).toBeDefined()
+      expect(report.algorithmUpdates).toBeDefined()
+      expect(report.overallImpact).toBeDefined()
+      expect(report.recommendations).toBeDefined()
+      expect(Array.isArray(report.recommendations)).toBe(true)
     })
 
-    it('should provide recommendations when no adaptations exist', async () => {
+    it('should include overall impact metrics', async () => {
+      const platform: PlatformType = 'medium'
       const timeRange = {
-        start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+        start: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
         end: new Date()
       }
 
       const report = await strategyAdapter.generateAdaptationReport(
-        'nonexistent_user',
+        'user123',
         platform,
         timeRange
       )
 
-      expect(report.adaptations.length).toBe(0)
-      expect(report.recommendations.length).toBeGreaterThan(0)
+      expect(report.overallImpact.engagementImprovement).toBeDefined()
+      expect(report.overallImpact.reachImprovement).toBeDefined()
+      expect(report.overallImpact.successRate).toBeDefined()
+      expect(typeof report.overallImpact.engagementImprovement).toBe('number')
+      expect(typeof report.overallImpact.reachImprovement).toBe('number')
+      expect(typeof report.overallImpact.successRate).toBe('number')
     })
   })
 
-  describe('getActiveAdaptation', () => {
-    it('should retrieve stored adaptation', async () => {
+  describe('Integration Tests', () => {
+    it('should handle complete adaptation workflow', async () => {
+      const platform: PlatformType = 'twitter'
+      const userId = 'user123'
+      
+      // Step 1: Adapt strategy
+      const currentStrategy = createMockStrategy(platform)
+      const metrics = createMockMetrics({ engagement: 100 })
+      const contentHistory = [createMockContent(platform, metrics)]
+
       const adaptation = await strategyAdapter.adaptStrategy(
         userId,
         platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        mockContentHistory
-      )
-
-      const retrieved = strategyAdapter.getActiveAdaptation(userId, platform)
-
-      expect(retrieved).toBeDefined()
-      expect(retrieved?.platform).toBe(adaptation.platform)
-      expect(retrieved?.confidence).toBe(adaptation.confidence)
-    })
-
-    it('should return undefined for non-existent adaptation', () => {
-      const retrieved = strategyAdapter.getActiveAdaptation('nonexistent_user', platform)
-      expect(retrieved).toBeUndefined()
-    })
-  })
-
-  describe('getUserAdaptations', () => {
-    it('should retrieve all adaptations for a user', async () => {
-      const platforms: PlatformType[] = ['twitter', 'linkedin', 'instagram']
-
-      for (const plt of platforms) {
-        await strategyAdapter.adaptStrategy(
-          userId,
-          plt,
-          { ...mockCurrentStrategy, platform: plt },
-          mockPerformanceData,
-          mockContentHistory
-        )
-      }
-
-      const adaptations = strategyAdapter.getUserAdaptations(userId)
-
-      expect(adaptations.length).toBeGreaterThanOrEqual(platforms.length)
-      expect(adaptations.every(a => a.platform)).toBe(true)
-    })
-
-    it('should return empty array for user with no adaptations', () => {
-      const adaptations = strategyAdapter.getUserAdaptations('nonexistent_user')
-      expect(adaptations).toEqual([])
-    })
-  })
-
-  describe('Edge Cases', () => {
-    it('should handle empty content history', async () => {
-      const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        mockCurrentStrategy,
-        mockPerformanceData,
-        []
+        currentStrategy,
+        metrics,
+        contentHistory
       )
 
       expect(adaptation).toBeDefined()
-      expect(adaptation.confidence).toBeGreaterThan(0)
+
+      // Step 2: Test adaptation
+      const testResult = await strategyAdapter.testStrategyAdaptation(
+        userId,
+        platform,
+        adaptation.originalStrategy,
+        adaptation.adaptedStrategy,
+        7
+      )
+
+      expect(testResult).toBeDefined()
+      expect(testResult.winner).toBeDefined()
+
+      // Step 3: Generate report
+      const report = await strategyAdapter.generateAdaptationReport(
+        userId,
+        platform,
+        {
+          start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+          end: new Date()
+        }
+      )
+
+      expect(report).toBeDefined()
+      expect(report.recommendations.length).toBeGreaterThan(0)
     })
 
-    it('should handle zero performance metrics', async () => {
-      const zeroPerformance: PerformanceMetrics = {
-        views: 0,
-        likes: 0,
-        comments: 0,
-        shares: 0,
-        clicks: 0,
-        engagement: 0,
-        reach: 0,
-        impressions: 0,
+    it('should adapt strategies across multiple platforms consistently', async () => {
+      const platforms: PlatformType[] = ['twitter', 'linkedin', 'instagram', 'facebook']
+      const platformContents: PlatformContent[] = platforms.map(p =>
+        createMockContent(p, createMockMetrics({ engagement: 100 }))
+      )
+
+      const crossPlatformMetrics: CrossPlatformMetrics = {
+        contentId: 'content123',
+        totalReach: 32000,
+        totalEngagement: 400,
+        totalClicks: 200,
+        platformBreakdown: platforms.reduce((acc, p) => {
+          acc[p] = createMockMetrics({ engagement: 100 })
+          return acc
+        }, {} as any),
+        bestPerformingPlatform: 'twitter',
+        worstPerformingPlatform: 'facebook',
+        overallEngagementRate: 0.0125,
         lastUpdated: new Date()
       }
 
-      const adaptation = await strategyAdapter.adaptStrategy(
-        userId,
-        platform,
-        mockCurrentStrategy,
-        zeroPerformance,
-        mockContentHistory
+      const adaptations = await strategyAdapter.adaptCrossPlatformStrategies(
+        'user123',
+        crossPlatformMetrics,
+        platformContents
       )
 
-      expect(adaptation).toBeDefined()
-      expect(adaptation.adaptationReasons.length).toBeGreaterThan(0)
-    })
-
-    it('should handle all platforms', async () => {
-      const platforms: PlatformType[] = [
-        'twitter',
-        'linkedin',
-        'instagram',
-        'youtube',
-        'tiktok',
-        'medium',
-        'facebook',
-        'blog'
-      ]
-
-      for (const plt of platforms) {
-        const adaptation = await strategyAdapter.adaptStrategy(
-          userId,
-          plt,
-          { ...mockCurrentStrategy, platform: plt },
-          mockPerformanceData,
-          mockContentHistory
-        )
-
-        expect(adaptation).toBeDefined()
-        expect(adaptation.platform).toBe(plt)
-      }
+      expect(adaptations.size).toBe(platforms.length)
+      
+      // All adaptations should have valid structure
+      adaptations.forEach((adaptation, platform) => {
+        expect(adaptation.platform).toBe(platform)
+        expect(adaptation.confidence).toBeGreaterThan(0)
+        expect(adaptation.adaptedStrategy).toBeDefined()
+        expect(adaptation.expectedImpact).toBeDefined()
+      })
     })
   })
 })

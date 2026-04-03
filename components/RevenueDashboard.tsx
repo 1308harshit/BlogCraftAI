@@ -19,6 +19,10 @@ interface RevenueMetrics {
   churnRate: number
   netRevenueRetention: number
   grossMargin: number
+  contentRevenue?: number
+  affiliateRevenue?: number
+  conversionRate?: number
+  revenuePerContent?: number
 }
 
 interface CustomerMetrics {
