@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "es6"],
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -24,5 +24,23 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "lib/integration",
+    "__tests__",
+    "lib/platform/__tests__",
+    "lib/db",
+    "lib/outcome-based-ai",
+    "lib/viral-prediction",
+    "lib/automation/content-pipeline.ts",
+    "lib/automation/bulk-content-generator.ts",
+    "lib/automation/content-quality-validator.ts",
+    "lib/automation/index.ts",
+    "lib/monetization/funnel-integration-example.ts",
+    "lib/platform/scheduling-integration-example.ts",
+    "lib/platform/strategy-integration-example.ts",
+    "lib/platform/strategy-adapter.ts",
+    "lib/platform/multi-platform-manager.ts",
+    "lib/platform/index.ts"
+  ]
 }

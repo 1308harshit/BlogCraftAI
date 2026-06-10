@@ -309,7 +309,7 @@ export class ContentDNAAnalyzer {
     if (elements.some(e => e.type === 'data')) {
       triggers.push('social_proof')
     }
-    if (lowerContent.match(/\b(you|your)\b/g)?.length > 10) {
+    if ((lowerContent.match(/\b(you|your)\b/g)?.length ?? 0) > 10) {
       triggers.push('personalization')
     }
     if (lowerContent.match(/\b(story|experience|journey)\b/)) {

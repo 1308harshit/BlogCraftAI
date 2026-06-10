@@ -317,7 +317,7 @@ export class PlatformOptimizer {
     // Check for engagement elements
     const hasQuestion = content.includes('?')
     const hasCTA = lowerContent.match(/\b(comment|share|like|follow|subscribe)\b/)
-    const hasPersonalization = lowerContent.match(/\b(you|your)\b/g)?.length > 5
+    const hasPersonalization = (lowerContent.match(/\b(you|your)\b/g)?.length ?? 0) > 5
 
     if (!hasQuestion && !hasCTA) {
       return {

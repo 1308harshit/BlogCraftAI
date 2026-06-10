@@ -29,6 +29,12 @@ yarn-error.log*
 .env.test.local
 .env.production.local
 
+# Environment files (never commit real secrets)
+.env
+.env.*
+!.env.local.example
+!.env.*.example
+
 # Vercel
 .vercel
 

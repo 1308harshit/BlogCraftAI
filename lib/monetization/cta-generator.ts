@@ -1,12 +1,7 @@
 // CTA Generator - Call-To-Action Generation and Optimization System
 // Intelligent CTA creation based on business goals with A/B testing and performance optimization
 
-import {
-  CallToAction,
-  BusinessMetric,
-  ContentContext,
-  MonetizationError
-} from './types'
+import { ContentContext, MonetizationError } from './types'
 
 export interface CTAGenerationRequest {
   content: string

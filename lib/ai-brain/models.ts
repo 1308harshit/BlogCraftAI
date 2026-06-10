@@ -14,6 +14,7 @@ import {
   UserFeedback,
   AIBrainError
 } from './types'
+import { RecommendationEngine } from './recommendation-engine'
 
 // AI Personality Model
 export class AIPersonalityModel {
@@ -305,7 +306,7 @@ export class AIPersonalityModel {
         },
         accuracy: 0.7,
         lastTrained: row.updated_at,
-        parameters: {},
+        parameters: { learningRate: 0.01, regularization: 0.001 },
         performance: {
           accuracy: 0.7,
           precision: 0.7,
@@ -363,7 +364,7 @@ export class LearningRecordModel {
         SELECT * FROM learning_records 
         WHERE user_id = $1
       `
-      const params = [userId]
+      const params: any[] = [userId]
 
       if (learningType) {
         queryText += ` AND learning_type = $2`
@@ -461,6 +462,27 @@ export class LearningRecordModel {
       throw new AIBrainError('Failed to analyze learning trends', 'ANALYZE_TRENDS_ERROR', error)
     }
   }
+}
+
+// Backwards-compatible facade used by some integration modules.
+export const personalAIBrain = {
+  async getRecommendations(
+    userId: string,
+    context: { contentType: string; topic: string; targetMetric?: string }
+  ) {
+    const engine = RecommendationEngine.getInstance()
+    return engine.generateRecommendations({
+      userId,
+      context: {
+        userId,
+        contentType: context.contentType,
+        platform: 'blog',
+        targetAudience: 'general',
+        businessGoals: [],
+      } as any,
+      preferences: {} as any,
+    } as any)
+  },
 }
 
 // User Feedback Model

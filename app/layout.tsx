@@ -1,27 +1,38 @@
+import type { Metadata } from 'next'
+import { Geist, Geist_Mono } from 'next/font/google'
+import { AppProviders } from '@/components/providers/app-providers'
 import './globals.css'
-import { Inter } from 'next/font/google'
-import { Toaster } from 'react-hot-toast'
-import { AuthProvider } from '@/components/AuthProvider'
 
-const inter = Inter({ subsets: ['latin'] })
+const geistSans = Geist({
+  variable: '--font-geist-sans',
+  subsets: ['latin'],
+})
 
-export const metadata = {
-  title: 'BlogCraft AI - Generate SEO Blog Posts in 60 Seconds',
-  description: 'Create Google-optimized blog content instantly with AI. Save ₹50,000+ monthly on content creation. Join 1000+ businesses using BlogCraft AI.',
+const geistMono = Geist_Mono({
+  variable: '--font-geist-mono',
+  subsets: ['latin'],
+})
+
+export const metadata: Metadata = {
+  title: {
+    default: 'BlogCraft AI — AI Blogging Operating System',
+    template: '%s | BlogCraft AI',
+  },
+  description:
+    'Write smarter. Rank faster. Scale infinitely. The premium AI-powered blogging platform for creators, startups, and agencies.',
+  keywords: ['AI blog writer', 'SEO content', 'content automation', 'BlogCraft AI'],
+  openGraph: {
+    title: 'BlogCraft AI',
+    description: 'The AI blogging operating system',
+    type: 'website',
+  },
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <AuthProvider>
-          {children}
-          <Toaster position="top-right" />
-        </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable} font-sans`}>
+        <AppProviders>{children}</AppProviders>
       </body>
     </html>
   )

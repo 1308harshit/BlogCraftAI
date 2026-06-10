@@ -126,7 +126,7 @@ export class MemoryManager {
 
       // Create user preference embedding
       const preferenceEmbedding: UserPreferenceEmbedding = {
-        id: userId,
+        userId,
         values: embedding,
         metadata: {
           userId,
@@ -174,10 +174,8 @@ export class MemoryManager {
 
       // Search similar content
       const similarContent = await searchSimilarContent(
-        queryEmbedding,
-        userId,
-        limit,
-        filter
+        queryContent,
+        limit
       )
 
       return similarContent
@@ -206,28 +204,25 @@ export class MemoryManager {
 
       // Search success patterns
       const patternEmbeddings = await searchSuccessPatterns(
-        queryEmbedding,
         userId,
-        context.contentType,
-        context.platform,
         limit
       )
 
       // Convert embeddings to success patterns
       const patterns: SuccessPattern[] = patternEmbeddings.map(embedding => ({
         patternId: embedding.id,
-        patternType: embedding.metadata.patternType as any,
-        contentType: embedding.metadata.contentType,
-        platform: embedding.metadata.platform,
+        patternType: (embedding.metadata as any)?.patternType ?? 'general',
+        contentType: String((embedding.metadata as any)?.contentType ?? ''),
+        platform: String((embedding.metadata as any)?.platform ?? ''),
         successMetrics: {
           views: 0,
-          engagement: embedding.metadata.successMetrics.engagement,
+          engagement: (embedding.metadata as any)?.successMetrics?.engagement ?? 0,
           shares: 0,
           comments: 0,
           clicks: 0,
-          conversions: embedding.metadata.successMetrics.conversions,
-          revenue: embedding.metadata.successMetrics.revenue,
-          viralScore: embedding.metadata.successMetrics.viralScore,
+          conversions: (embedding.metadata as any)?.successMetrics?.conversions ?? 0,
+          revenue: (embedding.metadata as any)?.successMetrics?.revenue ?? 0,
+          viralScore: (embedding.metadata as any)?.successMetrics?.viralScore ?? 0,
           seoScore: 0,
           roi: 0,
           engagementRate: 0,
@@ -236,8 +231,8 @@ export class MemoryManager {
         contextFactors: [],
         replicationInstructions: '',
         confidence: 0.8,
-        usageCount: embedding.metadata.replicationCount,
-        lastUsed: new Date(embedding.metadata.lastUsed),
+        usageCount: Number((embedding.metadata as any)?.replicationCount ?? 0),
+        lastUsed: new Date(String((embedding.metadata as any)?.lastUsed ?? new Date().toISOString())),
         createdAt: new Date()
       }))
 
@@ -269,9 +264,10 @@ export class MemoryManager {
       // Convert embedding metadata to preferences (simplified)
       // In a real implementation, you'd store full preferences in PostgreSQL
       // and use vector search for similarity matching
+      const meta = (preferenceEmbedding.metadata ?? {}) as any
       const preferences: UserPreferences = {
         brandVoice: {
-          tone: preferenceEmbedding.metadata.brandVoice as any,
+          tone: (meta.brandVoice as any) ?? 'neutral',
           personality: [],
           vocabulary: {
             preferredTerms: [],
@@ -322,7 +318,7 @@ export class MemoryManager {
           expertiseLevel: 'intermediate',
           preferredContentFormats: []
         },
-        businessGoals: preferenceEmbedding.metadata.contentGoals.map(goal => ({
+        businessGoals: (meta.contentGoals ?? []).map((goal: any) => ({
           type: goal as any,
           priority: 5,
           target: 1000,
@@ -330,7 +326,7 @@ export class MemoryManager {
           metrics: [],
           currentPerformance: 0
         })),
-        platformPriorities: preferenceEmbedding.metadata.preferredPlatforms.map(platform => ({
+        platformPriorities: (meta.preferredPlatforms ?? []).map((platform: any) => ({
           platform,
           priority: 5,
           contentTypes: [],

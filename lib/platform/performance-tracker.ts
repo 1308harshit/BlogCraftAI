@@ -362,8 +362,10 @@ export class PerformanceTracker {
       
       // Cache metrics in Redis
       await setRealTimeMetrics(platformContentId, {
-        contentId,
-        ...metrics
+        views: metrics.views ?? 0,
+        engagement: metrics.engagement ?? 0,
+        shares: metrics.shares ?? 0,
+        updatedAt: new Date().toISOString(),
       })
 
       return metrics

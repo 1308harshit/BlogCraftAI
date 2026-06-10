@@ -640,7 +640,9 @@ export class StrategyAdapter {
     const config = getPlatformConfig(platform)
 
     affectedMetrics.forEach(metric => {
-      const isDecreasing = recentAvg[metric as keyof PerformanceMetrics] < historicalAvg[metric as keyof PerformanceMetrics]
+      const isDecreasing =
+        (recentAvg[metric as keyof PerformanceMetrics] ?? 0) <
+        (historicalAvg[metric as keyof PerformanceMetrics] ?? 0)
 
       if (metric === 'engagement' && isDecreasing) {
         recommendations.push('Increase interactive content elements')

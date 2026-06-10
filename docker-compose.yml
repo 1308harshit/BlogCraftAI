@@ -1,0 +1,6 @@
+services:
+  ai-service:
+    build:
+      context: ./services/ai-service
+    ports:
+      - "8000:8000"
