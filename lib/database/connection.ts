@@ -1,6 +1,7 @@
 // Database connection and configuration for Revenue/Traffic Engine
 import { Pool, PoolClient } from 'pg'
 import { createClient } from '@supabase/supabase-js'
+import { envPublic, envServer } from '@/lib/env'
 
 // PostgreSQL connection pool
 let pool: Pool | null = null
@@ -8,8 +9,8 @@ let pool: Pool | null = null
 export function getPool(): Pool {
   if (!pool) {
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
-      ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+      connectionString: envServer.DATABASE_URL,
+      ssl: envServer.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
       max: 20,
       idleTimeoutMillis: 30000,
       connectionTimeoutMillis: 2000,
@@ -63,8 +64,8 @@ export async function transaction<T>(
 
 // Supabase client for existing functionality
 export const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  envPublic.NEXT_PUBLIC_SUPABASE_URL,
+  envPublic.NEXT_PUBLIC_SUPABASE_ANON_KEY
 )
 
 // Database health check

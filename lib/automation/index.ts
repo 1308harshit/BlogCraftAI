@@ -1,6 +1,10 @@
 // Automation System - Main Export File
 // Centralized exports for automation and content pipeline
 
+import { contentPipeline, type ContentPipelineConfig, type GeneratedContent } from './content-pipeline'
+import { researchEngine } from './research-engine'
+import { contentQualityValidator } from './content-quality-validator'
+
 // Core types and models
 export * from './types'
 export * from './models'
@@ -75,7 +79,8 @@ export class AutomationAPI {
       qualityThreshold: options?.qualityThreshold || 0.7,
       includeResearch: options?.includeResearch ?? true,
       includeOptimization: options?.includeOptimization ?? true,
-      includeScheduling: options?.includeScheduling ?? true
+      includeScheduling: options?.includeScheduling ?? true,
+      includeMonetization: (options as any)?.includeMonetization ?? false
     }
 
     return await contentPipeline.execute(config)

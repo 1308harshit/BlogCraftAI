@@ -2,8 +2,6 @@
 // Analyzes and optimizes monetization element performance with automatic testing and revenue attribution
 
 import { query, queryWithMetrics } from '../database/connection'
-import { performanceTracker } from '../outcome-based-ai/performance-tracker'
-import { roiCalculator } from '../outcome-based-ai/roi-calculator'
 import {
   MonetizationElement,
   MonetizationPerformance,
@@ -13,7 +11,7 @@ import {
   MonetizationTestResults,
   RevenueAttribution,
   ElementPerformanceMetrics,
-  OptimizationRecommendation,
+  MonetizationOptimizationRecommendation,
   MonetizationError
 } from './types'
 
@@ -205,7 +203,7 @@ export class MonetizationPerformanceOptimizerImpl implements MonetizationPerform
     performanceData: MonetizationPerformance
   ): Promise<MonetizationOptimization> {
     try {
-      const optimizations: OptimizationRecommendation[] = []
+      const optimizations: MonetizationOptimizationRecommendation[] = []
       
       // Analyze underperformers and generate optimizations
       for (const underperformer of performanceData.underperformers) {
@@ -569,7 +567,9 @@ export class MonetizationPerformanceOptimizerImpl implements MonetizationPerform
     }
   }
 
-  private prioritizeOptimizations(optimizations: OptimizationRecommendation[]): OptimizationRecommendation[] {
+  private prioritizeOptimizations(
+    optimizations: MonetizationOptimizationRecommendation[]
+  ): MonetizationOptimizationRecommendation[] {
     return optimizations.sort((a, b) => {
       // Sort by priority (high > medium > low) then by expected impact
       const priorityWeight = { high: 3, medium: 2, low: 1 }

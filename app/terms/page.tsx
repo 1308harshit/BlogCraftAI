@@ -33,7 +33,7 @@ export default function TermsOfService() {
             </p>
             <ul className="list-disc pl-6 mb-4">
               <li>Subscriptions are billed monthly in advance</li>
-              <li>Payments are processed through Stripe</li>
+              <li>Payments are processed through Razorpay</li>
               <li>Prices are subject to change with 30 days notice</li>
               <li>No refunds for partial months</li>
             </ul>
