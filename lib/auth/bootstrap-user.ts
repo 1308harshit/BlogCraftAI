@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
-import { envPublic, envServer } from '@/lib/env'
+import { envPublic } from '@/lib/env-public'
+import { envServer } from '@/lib/env-server'
 
 const admin = (() => {
   if (!envServer.SUPABASE_SERVICE_ROLE_KEY) return null

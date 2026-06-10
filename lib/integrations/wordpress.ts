@@ -1,4 +1,4 @@
-import { envServer } from '@/lib/env'
+import { envServer } from '@/lib/env-server'
 
 export async function publishToWordpress(input: {
   title: string
