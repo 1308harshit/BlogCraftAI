@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireUser } from '@/lib/auth/require-user'
 import { createRazorpaySubscription } from '@/lib/razorpay'
-import { envServer } from '@/lib/env'
+import { envServer } from '@/lib/env-server'
 
 const PLAN_TO_RAZORPAY_PLAN_ID: Record<string, string | undefined> = {
   pro: envServer.RAZORPAY_PLAN_PRO,
