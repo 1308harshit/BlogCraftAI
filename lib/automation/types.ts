@@ -83,6 +83,7 @@ export interface StepResult {
   executionTime: number
   timestamp: Date
   metadata?: Record<string, any>
+  error?: StepError
 }
 
 export interface StepError {

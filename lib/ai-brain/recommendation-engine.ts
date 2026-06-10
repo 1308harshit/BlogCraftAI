@@ -42,7 +42,7 @@ export class RecommendationEngine {
       // Get user's AI brain
       const brain = await AIPersonalityModel.getByUserId(request.userId)
       if (!brain) {
-        throw new AIBrainError('AI personality not found for user')
+        throw new AIBrainError('AI personality not found for user', 'BRAIN_NOT_FOUND')
       }
 
       // Merge preferences
@@ -219,7 +219,7 @@ export class RecommendationEngine {
 
     // Generate alternative based on different business goals
     const otherGoals = preferences.businessGoals
-      .filter(goal => goal.type !== primaryStrategy.strategyType)
+      // goal.type and strategyType are different enums; we only want "other" goals by priority here.
       .sort((a, b) => b.priority - a.priority)
       .slice(0, 2)
 
@@ -655,7 +655,7 @@ export class RecommendationEngine {
   }
 
   private generateCheckpoints(steps: ImplementationStep[]): string[] {
-    const checkpoints = []
+    const checkpoints: string[] = []
     const quarterPoints = [0.25, 0.5, 0.75, 1.0]
     
     quarterPoints.forEach((point, index) => {

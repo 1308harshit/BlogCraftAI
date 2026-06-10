@@ -12,7 +12,7 @@ export default function PrivacyPolicy() {
               <p>We collect information you provide directly:</p>
               <ul className="list-disc pl-6">
                 <li>Account information (name, email, password)</li>
-                <li>Payment information (processed by Stripe)</li>
+                <li>Payment information (processed by Razorpay)</li>
                 <li>Content you generate using our Service</li>
                 <li>Usage data and analytics</li>
               </ul>
@@ -34,7 +34,7 @@ export default function PrivacyPolicy() {
               <p>Your data is stored securely using:</p>
               <ul className="list-disc pl-6">
                 <li>Encrypted databases (Supabase)</li>
-                <li>Secure payment processing (Stripe)</li>
+                <li>Secure payment processing (Razorpay)</li>
                 <li>Industry-standard security practices</li>
               </ul>
             </section>
@@ -66,7 +66,7 @@ export default function PrivacyPolicy() {
               <p>We use third-party services:</p>
               <ul className="list-disc pl-6">
                 <li>Groq AI for content generation</li>
-                <li>Stripe for payment processing</li>
+                <li>Razorpay for payment processing</li>
                 <li>Vercel for hosting</li>
                 <li>Supabase for data storage</li>
               </ul>

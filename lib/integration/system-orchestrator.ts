@@ -3,6 +3,7 @@
 
 import { personalAIBrain } from '../ai-brain/models'
 import { outcomeOptimizer } from '../outcome-based-ai/outcome-optimizer'
+import type { BusinessMetric } from '../outcome-based-ai/types'
 import { viralEngine } from '../viral-prediction/viral-engine'
 import { contentPipeline } from '../automation/content-pipeline'
 import { affiliateEngine } from '../monetization/affiliate-engine'
@@ -36,10 +37,21 @@ export class SystemOrchestrator {
     })
 
     // 2. Optimize for target outcome
-    const optimizedStrategy = await outcomeOptimizer.optimizeForMetric(
-      { title: topic, content: '', type: 'blog' },
-      targetMetric
-    )
+    const metric: BusinessMetric = {
+      metricId: `metric_${targetMetric}`,
+      type: targetMetric,
+      name: targetMetric,
+      description: `Optimize content for ${targetMetric}`,
+      unit: 'score',
+      targetValue: 100,
+      currentValue: 0,
+      priority: 8,
+      timeframe: 30,
+      calculationMethod: 'heuristic',
+      dependencies: [],
+      benchmarks: [],
+    }
+    const optimizedStrategy = await outcomeOptimizer.optimizeForMetric(topic, metric)
 
     // 3. Predict viral potential
     const viralScore = await viralEngine.predictViralPotential({

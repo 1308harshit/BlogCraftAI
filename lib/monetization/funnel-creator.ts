@@ -1,11 +1,13 @@
 // Funnel Creator - Sales Funnel and Lead Generation System
 // Automated funnel creation, lead magnet generation, and email nurturing sequences
 
-import {
-  ContentContext,
-  BusinessGoal,
-  MonetizationError
-} from './types'
+import { ContentContext, MonetizationError } from './types'
+
+export interface BusinessGoal {
+  type: 'traffic' | 'engagement' | 'conversions' | 'revenue' | 'lead_generation'
+  target: number
+  description?: string
+}
 
 export interface SalesFunnel {
   id: string

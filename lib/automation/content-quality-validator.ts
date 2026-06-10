@@ -444,11 +444,11 @@ export class ContentQualityValidator {
     }
 
     // General recommendations
-    if (checks.find(c => c.name === 'engagement')?.score < 0.7) {
+    if ((checks.find(c => c.name === 'engagement')?.score ?? 1) < 0.7) {
       recommendations.push('Add more engaging elements like questions and personal stories')
     }
 
-    if (checks.find(c => c.name === 'seo')?.score < 0.7) {
+    if ((checks.find(c => c.name === 'seo')?.score ?? 1) < 0.7) {
       recommendations.push('Improve SEO by optimizing title and keyword usage')
     }
 

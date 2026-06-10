@@ -337,15 +337,15 @@ export interface Touchpoint {
 export interface MonetizationOptimization {
   contentId: string
   currentPerformance: MonetizationPerformance
-  optimizations: OptimizationRecommendation[]
+  optimizations: MonetizationOptimizationRecommendation[]
   expectedRevenueIncrease: number
   expectedConversionRateIncrease: number
-  implementationPriority: OptimizationRecommendation[]
+  implementationPriority: MonetizationOptimizationRecommendation[]
   confidence: number
   createdAt: Date
 }
 
-export interface OptimizationRecommendation {
+export interface MonetizationOptimizationRecommendation {
   elementId: string
   type: 'placement' | 'content' | 'element_type' | 'replication' | 'timing'
   description: string

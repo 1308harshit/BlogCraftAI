@@ -405,7 +405,10 @@ By following these steps, you can achieve similar results. The key is consistenc
       estimatedTraffic: 2000,
       keywords: [businessGoal, 'strategy', 'success'],
       contentAngle: 'general',
-      rationale: 'General topic with broad appeal'
+      rationale: 'General topic with broad appeal',
+      sourceType: 'evergreen' as const,
+      suggestedFormats: ['blog'],
+      targetPlatforms: config.platforms?.length ? config.platforms : ['web']
     }))
   }
 }
