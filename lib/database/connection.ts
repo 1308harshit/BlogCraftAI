@@ -1,7 +1,8 @@
 // Database connection and configuration for Revenue/Traffic Engine
 import { Pool, PoolClient } from 'pg'
 import { createClient } from '@supabase/supabase-js'
-import { envPublic, envServer } from '@/lib/env'
+import { envPublic } from '@/lib/env-public'
+import { envServer } from '@/lib/env-server'
 
 // PostgreSQL connection pool
 let pool: Pool | null = null
