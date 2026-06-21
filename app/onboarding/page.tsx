@@ -57,12 +57,14 @@ export default function OnboardingPage() {
           router.push('/login')
           return
         }
-        throw new Error('Save failed')
+        const payload = (await res.json().catch(() => null)) as { details?: string; error?: string } | null
+        throw new Error(payload?.details ?? payload?.error ?? 'Save failed')
       }
       toast.success('Brand memory saved!')
       router.push('/dashboard')
-    } catch {
-      toast.error('Could not save — check database connection')
+    } catch (err) {
+      const message = err instanceof Error ? err.message : 'Could not save — check database connection'
+      toast.error(message)
     } finally {
       setSaving(false)
     }

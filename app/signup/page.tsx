@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
+import { envPublic } from '@/lib/env'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -15,6 +16,11 @@ export default function SignupPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  const authCallbackUrl =
+    envPublic.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ??
+    (typeof window !== 'undefined' ? window.location.origin : '')
+  const emailRedirectTo = `${authCallbackUrl}/auth/callback`
+
   const signUp = async () => {
     setLoading(true)
     try {
@@ -23,7 +29,7 @@ export default function SignupPage() {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo,
         },
       })
       if (error) {
@@ -43,7 +49,7 @@ export default function SignupPage() {
       const supabase = createSupabaseBrowserClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
+        options: { redirectTo: emailRedirectTo },
       })
       if (error) toast.error(error.message)
     } finally {
@@ -59,27 +65,37 @@ export default function SignupPage() {
           <CardDescription>Start building your AI blogging system</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-            />
-            <Input
-              type="password"
-              placeholder="Password (min 6 characters)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="new-password"
-              onKeyDown={(e) => e.key === 'Enter' && signUp()}
-            />
-          </div>
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault()
+              void signUp()
+            }}
+          >
+            <div className="space-y-2">
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
+              />
+              <Input
+                type="password"
+                placeholder="Password (min 6 characters)"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="new-password"
+                minLength={6}
+                required
+              />
+            </div>
 
-          <Button className="w-full" onClick={signUp} disabled={loading || !email || password.length < 6}>
-            {loading ? 'Creating…' : 'Sign up'}
-          </Button>
+            <Button className="w-full" type="submit" disabled={loading || !email || password.length < 6}>
+              {loading ? 'Creating…' : 'Sign up'}
+            </Button>
+          </form>
 
           <div className="grid grid-cols-2 gap-2">
             <Button variant="outline" onClick={() => oauth('google')} disabled={loading}>

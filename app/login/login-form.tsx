@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/lib/supabase/browser'
+import { envPublic } from '@/lib/env'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -40,13 +41,18 @@ export function LoginForm() {
     }
   }
 
+  const authCallbackUrl =
+    envPublic.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '') ??
+    (typeof window !== 'undefined' ? window.location.origin : '')
+  const emailRedirectTo = `${authCallbackUrl}/auth/callback`
+
   const oauth = async (provider: 'google' | 'github') => {
     setLoading(true)
     try {
       const supabase = createSupabaseBrowserClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
-        options: { redirectTo: `${window.location.origin}/auth/callback` },
+        options: { redirectTo: emailRedirectTo },
       })
       if (error) toast.error(error.message)
     } finally {
@@ -62,27 +68,36 @@ export function LoginForm() {
           <CardDescription>Log in to your BlogCraft AI workspace</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-            />
-            <Input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              onKeyDown={(e) => e.key === 'Enter' && signIn()}
-            />
-          </div>
+          <form
+            className="space-y-4"
+            onSubmit={(e) => {
+              e.preventDefault()
+              void signIn()
+            }}
+          >
+            <div className="space-y-2">
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
+                required
+              />
+              <Input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                autoComplete="current-password"
+                required
+              />
+            </div>
 
-          <Button className="w-full" onClick={signIn} disabled={loading || !email || !password}>
-            {loading ? 'Signing in…' : 'Sign in'}
-          </Button>
+            <Button className="w-full" type="submit" disabled={loading || !email || !password}>
+              {loading ? 'Signing in…' : 'Sign in'}
+            </Button>
+          </form>
 
           <div className="grid grid-cols-2 gap-2">
             <Button variant="outline" onClick={() => oauth('google')} disabled={loading}>
