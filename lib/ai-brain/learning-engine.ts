@@ -24,16 +24,15 @@ import {
 
 import { AIPersonalityModel, LearningRecordModel } from './models'
 import { MemoryManager } from './memory'
+import { getAIBrainConfig } from '../config'
+
+// Get configuration
+const config = getAIBrainConfig()
 
 // Core Learning Engine Implementation
 export class LearningEngine implements ILearningEngine {
   private static instance: LearningEngine
-  private learningThresholds = {
-    minSamplesForInsight: 5,
-    confidenceThreshold: 0.7,
-    performanceImprovementThreshold: 0.1,
-    patternRecognitionThreshold: 0.8
-  }
+  private learningThresholds = config.learning
 
   static getInstance(): LearningEngine {
     if (!LearningEngine.instance) {

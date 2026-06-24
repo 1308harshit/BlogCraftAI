@@ -1,6 +1,11 @@
 // API Management System
 // REST API access, authentication, rate limiting
 
+import { getRateLimitingConfig } from '../config'
+
+// Get configuration
+const config = getRateLimitingConfig()
+
 export interface APIKey {
   id: string
   key: string
@@ -40,7 +45,7 @@ export class APIManager {
       userId,
       name,
       permissions,
-      rateLimit: 1000,
+      rateLimit: config.api.requestsPerMinute,
       usageCount: 0,
       createdAt: new Date()
     }
