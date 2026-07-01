@@ -13,7 +13,7 @@ export interface DbProject {
 }
 
 export async function listProjects(profileId: string): Promise<DbProject[]> {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return []
 
   const { data } = await supabase
@@ -29,7 +29,7 @@ export async function upsertProject(
   profileId: string,
   project: { id?: string; title: string; content: string; seo_score?: number; content_type?: string }
 ): Promise<DbProject | null> {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return null
 
   const payload = {
@@ -65,7 +65,7 @@ export async function upsertProject(
 }
 
 export async function deleteProject(profileId: string, projectId: string) {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return false
   const { error } = await supabase.from('projects').delete().eq('id', projectId).eq('user_id', profileId)
   return !error

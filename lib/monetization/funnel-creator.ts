@@ -6,6 +6,9 @@ import { ContentContext, MonetizationError } from './types'
 export interface BusinessGoal {
   type: 'traffic' | 'engagement' | 'conversions' | 'revenue' | 'lead_generation'
   target: number
+  priority?: number
+  timeframe?: number
+  metrics?: string[]
   description?: string
 }
 
