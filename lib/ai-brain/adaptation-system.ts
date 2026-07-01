@@ -236,7 +236,7 @@ export class AdaptationSystem {
     
     if (lastAdaptation) {
       const timeSinceLastAdaptation = Date.now() - lastAdaptation.timestamp.getTime()
-      if (timeSinceLastAdaptation < this.adaptationThresholds.adaptationCooldown) {
+      if (timeSinceLastAdaptation < this.adaptationThresholds.adaptationCooldownMs) {
         throw new AdaptationError('Adaptation cooldown period not met')
       }
     }

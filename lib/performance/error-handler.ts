@@ -112,7 +112,7 @@ export class CircuitBreaker {
     } catch (error) {
       this.onFailure()
       
-      if (fallback && this.state === 'open') {
+      if (fallback) {
         console.warn(`[CircuitBreaker:${this.name}] Using fallback after failure`)
         return await fallback()
       }
