@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { routeAI } from '@/lib/ai/router'
 import { fetchSourceText } from '@/lib/research/fetch-source'
+import { requireUser } from '@/lib/auth/require-user'
 
 export async function POST(req: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const { topic, sources = [], competitorUrls = [] } = await req.json()
     if (!topic) {
       return NextResponse.json({ error: 'Topic is required' }, { status: 400 })

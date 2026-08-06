@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireUser } from '@/lib/auth/require-user'
 
 function stripHtml(html: string) {
   return html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim()
@@ -15,6 +16,10 @@ function toHtml(html: string, title: string) {
 }
 
 export async function POST(req: NextRequest) {
+  // SECURITY FIX: Require authentication
+  const authed = await requireUser()
+  if (!authed.ok) return authed.response
+
   const { content, title = 'Blog Post', format } = await req.json()
   if (!content || !format) {
     return NextResponse.json({ error: 'content and format required' }, { status: 400 })

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireUser } from '@/lib/auth/require-user'
 
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
 const GROQ_MODEL = 'llama-3.1-8b-instant'
@@ -61,6 +62,10 @@ Provide actionable insights to outrank competitors.`
 
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const { url, content } = await request.json()
 
     if (!url && !content) {

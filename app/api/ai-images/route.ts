@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
+import { requireUser } from '@/lib/auth/require-user'
 
 async function generateWithDalle(prompt: string): Promise<string | null> {
   const key = process.env.OPENAI_API_KEY
@@ -37,6 +38,10 @@ function extractImagePrompts(content: string): string[] {
 
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const { content, prompt, imageCount = 3 } = await request.json()
     const text = content ?? (prompt ? `# ${prompt}` : '')
     if (!text) {

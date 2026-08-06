@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { researchEngine } from '@/lib/automation/research-engine'
+import { requireUser } from '@/lib/auth/require-user'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -10,22 +11,20 @@ export const dynamic = 'force-dynamic'
 // POST /api/automation/research - Generate automated research plan
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+    // SECURITY FIX: Use authenticated user ID from session, not from request
+    const userId = authed.user.id
+
     const body = await request.json()
     const {
-      userId,
       action,
       count = 10,
       contentTypes = ['blog'],
       platforms = ['blog'],
       businessGoals = ['traffic']
     } = body
-
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      )
-    }
 
     switch (action) {
       case 'analyze-trends': {
@@ -93,16 +92,14 @@ export async function POST(request: NextRequest) {
 // GET /api/automation/research - Get cached research data
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = request.nextUrl.searchParams
-    const userId = searchParams.get('userId')
-    const action = searchParams.get('action')
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+    // SECURITY FIX: Use authenticated user ID from session
+    const userId = authed.user.id
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      )
-    }
+    const searchParams = request.nextUrl.searchParams
+    const action = searchParams.get('action')
 
     switch (action) {
       case 'trends': {

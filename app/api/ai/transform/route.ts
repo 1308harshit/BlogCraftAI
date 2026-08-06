@@ -1,10 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { routeAI, type AITask } from '@/lib/ai/router'
+import { requireUser } from '@/lib/auth/require-user'
 
 const VALID_TASKS: AITask[] = ['rewrite', 'summarize', 'expand', 'seo']
 
 export async function POST(req: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const { content, task, tone, instruction } = await req.json()
 
     if (!content || !task) {
