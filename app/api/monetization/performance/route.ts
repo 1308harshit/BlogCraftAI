@@ -3,6 +3,7 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { monetizationPerformanceOptimizer } from '@/lib/monetization/performance-optimizer'
+import { requireUser } from '@/lib/auth/require-user'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -19,21 +20,20 @@ export const dynamic = 'force-dynamic'
  */
 export async function GET(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+    // SECURITY FIX: Use authenticated user ID from session
+    const authenticatedUserId = authed.user.id
+
     const { searchParams } = new URL(request.url)
     const contentId = searchParams.get('contentId')
     const action = searchParams.get('action') || 'analyze'
-    const userId = searchParams.get('userId')
     const limit = parseInt(searchParams.get('limit') || '10')
 
     if (action === 'top-performers') {
-      if (!userId) {
-        return NextResponse.json(
-          { error: 'userId is required for top-performers action' },
-          { status: 400 }
-        )
-      }
-
-      const topPerformers = await monetizationPerformanceOptimizer.getTopPerformingElements(userId, limit)
+      // Use authenticated user ID, not from query params
+      const topPerformers = await monetizationPerformanceOptimizer.getTopPerformingElements(authenticatedUserId, limit)
       
       return NextResponse.json({
         success: true,
@@ -88,6 +88,10 @@ export async function GET(request: NextRequest) {
  */
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const body = await request.json()
     const { action, contentId, performanceData, testType, testId } = body
 

@@ -1,0 +1,42 @@
+[
+  {
+    "page": "01-landing",
+    "url": "/",
+    "status": 200,
+    "finalUrl": "http://localhost:3000/",
+    "screenshot": "D:\\AI project\\test-results\\01-landing.png"
+  },
+  {
+    "page": "02-signup",
+    "url": "/signup",
+    "status": 200,
+    "finalUrl": "http://localhost:3000/signup",
+    "screenshot": "D:\\AI project\\test-results\\02-signup.png"
+  },
+  {
+    "page": "03-login",
+    "url": "/login",
+    "status": 200,
+    "finalUrl": "http://localhost:3000/login",
+    "screenshot": "D:\\AI project\\test-results\\03-login.png"
+  },
+  {
+    "page": "04-dashboard-redirect",
+    "url": "/dashboard",
+    "status": 200,
+    "finalUrl": "http://localhost:3000/login?next=%2Fdashboard",
+    "screenshot": "D:\\AI project\\test-results\\04-dashboard-redirect.png"
+  },
+  {
+    "page": "05-onboarding-redirect",
+    "url": "/onboarding",
+    "status": 200,
+    "finalUrl": "http://localhost:3000/login?next=%2Fonboarding",
+    "screenshot": "D:\\AI project\\test-results\\05-onboarding-redirect.png"
+  },
+  {
+    "page": "06-export-api",
+    "status": 200,
+    "output": "# AI Blogging Tips\n\nAI Blogging Tips Write consistently, research keywords, and optimize headings for SEO."
+  }
+]

@@ -21,17 +21,15 @@ import {
 import { AIPersonalityModel, LearningRecordModel } from './models'
 import { MemoryManager } from './memory'
 import { learningEngine } from './learning-engine'
+import { getAIBrainConfig } from '../config'
+
+// Get configuration
+const config = getAIBrainConfig()
 
 // Core Adaptation System
 export class AdaptationSystem {
   private static instance: AdaptationSystem
-  private adaptationThresholds = {
-    performanceDropThreshold: 0.2,      // 20% performance drop triggers adaptation
-    feedbackScoreThreshold: 6,          // Feedback score below 6/10 triggers adaptation
-    patternConfidenceThreshold: 0.8,    // Pattern confidence above 80% triggers replication
-    adaptationCooldown: 24 * 60 * 60 * 1000, // 24 hours between adaptations
-    maxAdaptationsPerDay: 5             // Maximum adaptations per day per user
-  }
+  private adaptationThresholds = config.adaptation
 
   private adaptationHistory: Map<string, AdaptationRecord[]> = new Map()
 
@@ -238,7 +236,7 @@ export class AdaptationSystem {
     
     if (lastAdaptation) {
       const timeSinceLastAdaptation = Date.now() - lastAdaptation.timestamp.getTime()
-      if (timeSinceLastAdaptation < this.adaptationThresholds.adaptationCooldown) {
+      if (timeSinceLastAdaptation < this.adaptationThresholds.adaptationCooldownMs) {
         throw new AdaptationError('Adaptation cooldown period not met')
       }
     }

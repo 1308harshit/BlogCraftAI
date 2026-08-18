@@ -1,18 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { revenueTracker } from '@/lib/revenue-tracker'
+import { requireUser } from '@/lib/auth/require-user'
 
 export async function GET(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication and check admin access
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
     const metric = searchParams.get('metric') // 'all', 'revenue', 'customers', 'churn', 'forecasting'
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      )
-    }
+    // SECURITY FIX: Use authenticated user ID from session, not from query params
+    const userId = authed.user.id
 
     // Check if user has access to revenue dashboard (admin/owner only)
     const hasAccess = await checkRevenueDashboardAccess(userId)
@@ -104,14 +104,13 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { userId, action, data } = await request.json()
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
 
-    if (!userId) {
-      return NextResponse.json(
-        { error: 'User ID is required' },
-        { status: 400 }
-      )
-    }
+    const { action, data } = await request.json()
+    // SECURITY FIX: Use authenticated user ID from session
+    const userId = authed.user.id
 
     // Check access
     const hasAccess = await checkRevenueDashboardAccess(userId)

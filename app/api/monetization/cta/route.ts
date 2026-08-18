@@ -3,10 +3,15 @@
 
 import { NextRequest, NextResponse } from 'next/server'
 import { ctaGenerator } from '@/lib/monetization'
+import { requireUser } from '@/lib/auth/require-user'
 
 // POST /api/monetization/cta - Generate new CTA
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const body = await request.json()
     const { action, ...data } = body
 
@@ -126,6 +131,10 @@ async function handleAnalyzeTest(data: any) {
 // GET /api/monetization/cta?contentId=xxx - Get CTA performance
 export async function GET(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const searchParams = request.nextUrl.searchParams
     const contentId = searchParams.get('contentId')
 

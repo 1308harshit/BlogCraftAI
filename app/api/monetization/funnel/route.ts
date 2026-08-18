@@ -4,9 +4,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { funnelCreator } from '@/lib/monetization/funnel-creator'
 import type { FunnelCreationRequest } from '@/lib/monetization/funnel-creator'
+import { requireUser } from '@/lib/auth/require-user'
 
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const body = await request.json()
     const { action, ...params } = body
 
@@ -99,6 +104,10 @@ export async function POST(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const { searchParams } = new URL(request.url)
     const funnelId = searchParams.get('funnelId')
 

@@ -14,6 +14,11 @@ import {
   MonetizationOptimizationRecommendation,
   MonetizationError
 } from './types'
+import { getMonetizationConfig, getABTestingConfig } from '../config'
+
+// Get configuration
+const monetizationConfig = getMonetizationConfig()
+const testConfig = getABTestingConfig()
 
 export interface MonetizationPerformanceOptimizer {
   analyzeElementPerformance(contentId: string): Promise<MonetizationPerformance>
@@ -326,8 +331,8 @@ export class MonetizationPerformanceOptimizerImpl implements MonetizationPerform
         successMetric: 'revenue',
         status: 'running',
         startedAt: new Date(),
-        minSampleSize: 100,
-        maxDuration: 14 // days
+        minSampleSize: testConfig.minSampleSize,
+        maxDuration: testConfig.maxDurationDays
       }
 
       // Store test in database
@@ -369,8 +374,8 @@ export class MonetizationPerformanceOptimizerImpl implements MonetizationPerform
       // Calculate statistical significance
       const significance = this.calculateStatisticalSignificance(variantResults)
 
-      // Determine winner
-      const winner = significance >= 0.95 
+      // Determine winner (use config confidence level)
+      const winner = significance >= testConfig.confidenceLevel 
         ? this.determineWinner(variantResults, test.successMetric)
         : undefined
 
@@ -784,8 +789,8 @@ export class MonetizationPerformanceOptimizerImpl implements MonetizationPerform
       status: row.status,
       startedAt: row.started_at,
       endedAt: row.ended_at,
-      minSampleSize: 100,
-      maxDuration: 14
+      minSampleSize: testConfig.minSampleSize,
+      maxDuration: testConfig.maxDurationDays
     }
   }
 

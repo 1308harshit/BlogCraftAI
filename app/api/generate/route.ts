@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { UsageLimitService } from '@/lib/usage-limits'
+import { requireUser } from '@/lib/auth/require-user'
 
 // Groq AI configuration (using cheapest model: Llama 3.1 8B)
 const GROQ_API_URL = 'https://api.groq.com/openai/v1/chat/completions'
@@ -129,7 +130,13 @@ Make it valuable, informative, and easy to read.`
 
 export async function POST(request: NextRequest) {
   try {
-    const { topic, keywords, userId } = await request.json()
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
+    const { topic, keywords } = await request.json()
+    // SECURITY FIX: Use authenticated user ID from session, not from request
+    const userId = authed.user.id
 
     if (!topic) {
       return NextResponse.json(
@@ -138,22 +145,20 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check usage limits
-    if (userId) {
-      const usageCheck = await UsageLimitService.canGenerateArticle(userId)
-      
-      if (!usageCheck.allowed) {
-        return NextResponse.json(
-          { 
-            error: 'Monthly limit reached',
-            message: `You've reached your monthly limit of ${usageCheck.limit} articles. Upgrade to continue generating content.`,
-            limit: usageCheck.limit,
-            remaining: 0,
-            resetDate: usageCheck.resetDate
-          },
-          { status: 429 } // Too Many Requests
-        )
-      }
+    // Check usage limits for authenticated user
+    const usageCheck = await UsageLimitService.canGenerateArticle(userId)
+    
+    if (!usageCheck.allowed) {
+      return NextResponse.json(
+        { 
+          error: 'Monthly limit reached',
+          message: `You've reached your monthly limit of ${usageCheck.limit} articles. Upgrade to continue generating content.`,
+          limit: usageCheck.limit,
+          remaining: 0,
+          resetDate: usageCheck.resetDate
+        },
+        { status: 429 } // Too Many Requests
+      )
     }
 
     // Check if using demo API key or no key
@@ -161,10 +166,8 @@ export async function POST(request: NextRequest) {
       console.log('Using mock API response for demo')
       const article = generateMockArticle(topic, keywords)
       
-      // Increment usage count
-      if (userId) {
-        await UsageLimitService.incrementUsage(userId)
-      }
+      // Increment usage count for authenticated user
+      await UsageLimitService.incrementUsage(userId)
       
       return NextResponse.json({ 
         article,
@@ -181,10 +184,8 @@ export async function POST(request: NextRequest) {
       throw new Error('Failed to generate article')
     }
 
-    // Increment usage count
-    if (userId) {
-      await UsageLimitService.incrementUsage(userId)
-    }
+    // Increment usage count for authenticated user
+    await UsageLimitService.incrementUsage(userId)
 
     return NextResponse.json({ 
       article,
