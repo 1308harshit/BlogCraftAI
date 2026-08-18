@@ -2,6 +2,11 @@
 // Intelligent CTA creation based on business goals with A/B testing and performance optimization
 
 import { ContentContext, MonetizationError } from './types'
+import { getMonetizationConfig, getABTestingConfig } from '../config'
+
+// Get configuration
+const monetizationConfig = getMonetizationConfig()
+const testConfig = getABTestingConfig()
 
 export interface CTAGenerationRequest {
   content: string
@@ -242,9 +247,9 @@ export class CTAGenerator {
         variants,
         trafficSplit,
         successMetric: this.selectSuccessMetric(baseCTA.goal),
-        minSampleSize: 100,
-        maxDuration: 14, // days
-        significanceThreshold: 0.95
+        minSampleSize: testConfig.minSampleSize,
+        maxDuration: testConfig.maxDurationDays,
+        significanceThreshold: testConfig.confidenceLevel
       }
     } catch (error) {
       throw new MonetizationError('Failed to create A/B test', 'AB_TEST_CREATION_ERROR', error)

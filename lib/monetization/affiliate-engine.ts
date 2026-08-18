@@ -12,6 +12,10 @@ import {
   InsertedProduct,
   AffiliateEngineError
 } from './types'
+import { getMonetizationConfig } from '../config'
+
+// Get configuration
+const config = getMonetizationConfig()
 
 export class AffiliateEngineImpl implements AffiliateEngine {
   private static instance: AffiliateEngineImpl
@@ -45,8 +49,8 @@ export class AffiliateEngineImpl implements AffiliateEngine {
         context
       )
       
-      // Filter to only high-relevance products (90%+ threshold)
-      const relevantProducts = scoredProducts.filter(p => p.relevanceScore >= 0.90)
+      // Filter to only high-relevance products using config threshold
+      const relevantProducts = scoredProducts.filter(p => p.relevanceScore >= config.affiliateRelevanceThreshold)
       
       // Sort by relevance and conversion potential
       return relevantProducts.sort((a, b) => {
@@ -87,9 +91,10 @@ export class AffiliateEngineImpl implements AffiliateEngine {
       for (const product of products) {
         const insertionPoints = this.findInsertionPoints(monetizedContent, product)
         
-        // Select best insertion point
+        // Select best insertion point (use config minimum naturalness threshold)
         const bestPoint = insertionPoints[0]
-        if (bestPoint && bestPoint.naturalness >= 0.85) {
+        const minNaturalness = config.minProductRelevance // 0.80 by default
+        if (bestPoint && bestPoint.naturalness >= minNaturalness) {
           const insertion = this.createInsertion(product, bestPoint)
           monetizedContent = this.insertAtPosition(
             monetizedContent,
@@ -317,9 +322,10 @@ export class AffiliateEngineImpl implements AffiliateEngine {
       
       // Calculate naturalness score based on keyword presence
       const keywordMatches = productKeywords.filter(kw => sentence.includes(kw)).length
-      const naturalness = Math.min(0.85 + (keywordMatches * 0.05), 1.0)
+      const minNaturalness = config.minProductRelevance
+      const naturalness = Math.min(minNaturalness + (keywordMatches * 0.05), 1.0)
       
-      if (naturalness >= 0.85) {
+      if (naturalness >= minNaturalness) {
         insertionPoints.push({
           position: content.indexOf(sentences[i]) + sentences[i].length,
           context: sentences[i].trim(),

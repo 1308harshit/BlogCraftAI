@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { requireUser } from '@/lib/auth/require-user'
 
 interface SEOAnalysis {
   score: number
@@ -133,6 +134,10 @@ function analyzeSEO(content: string, keywords: string): SEOAnalysis {
 
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const { content, keywords } = await request.json()
 
     if (!content) {

@@ -11,6 +11,10 @@ import {
 } from './types'
 import { performanceTracker } from './performance-tracker'
 import { outcomeOptimizer } from './outcome-optimizer'
+import { getAIBrainConfig } from '../config'
+
+// Get configuration
+const config = getAIBrainConfig()
 
 export interface PerformanceBenchmark {
   metricType: string
@@ -42,7 +46,7 @@ export interface PerformanceGap {
 
 export class AdaptiveStrategyEngine {
   private static instance: AdaptiveStrategyEngine
-  private adjustmentThreshold = 0.2 // 20% below target triggers adjustment
+  private adjustmentThreshold = config.adaptation.performanceDropThreshold
 
   static getInstance(): AdaptiveStrategyEngine {
     if (!AdaptiveStrategyEngine.instance) {
@@ -448,7 +452,7 @@ export class AdaptiveStrategyEngine {
   // Batch process underperforming content
   async batchAdjustUnderperforming(
     userId: string,
-    threshold: number = 0.3
+    threshold: number = config.adaptation.performanceDropThreshold
   ): Promise<StrategyAdjustment[]> {
     try {
       // Find underperforming content

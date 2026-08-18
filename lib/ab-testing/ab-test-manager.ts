@@ -9,14 +9,18 @@ import {
   TestConfig,
   OptimizationRecommendation
 } from './types'
+import { getABTestingConfig } from '../config'
+
+// Get configuration
+const config = getABTestingConfig()
 
 export class ABTestManager {
   private static instance: ABTestManager
   private tests: Map<string, ABTest> = new Map()
   private config: TestConfig = {
-    minSampleSize: 100,
-    maxDuration: 14,
-    confidenceLevel: 0.95,
+    minSampleSize: config.minSampleSize,
+    maxDuration: config.maxDurationDays,
+    confidenceLevel: config.confidenceLevel,
     trafficSplit: 'even',
     autoImplementWinner: false
   }

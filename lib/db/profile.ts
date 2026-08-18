@@ -16,7 +16,7 @@ export async function getOrCreateProfile(
   email?: string | null,
   name?: string | null
 ): Promise<DbProfile | null> {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return null
 
   const { data: existing } = await supabase
@@ -48,7 +48,7 @@ export async function getOrCreateProfile(
 }
 
 export async function saveBrandMemory(profileId: string, memory: BrandMemory) {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return false
 
   await supabase.from('brand_memory').delete().eq('user_id', profileId)
@@ -76,7 +76,7 @@ export async function saveBrandMemory(profileId: string, memory: BrandMemory) {
 }
 
 export async function getBrandMemory(profileId: string): Promise<BrandMemory | null> {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return null
 
   const { data } = await supabase
@@ -98,7 +98,7 @@ export async function getBrandMemory(profileId: string): Promise<BrandMemory | n
 }
 
 export async function incrementArticleCount(profileId: string) {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return
 
   const { data } = await supabase.from('profiles').select('articles_generated').eq('id', profileId).single()
@@ -114,7 +114,7 @@ export async function incrementArticleCount(profileId: string) {
 }
 
 export async function updateProfilePlan(clerkUserId: string, plan: DbProfile['plan']) {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   if (!supabase) return
 
   await supabase.from('profiles').update({ plan, updated_at: new Date().toISOString() }).eq('clerk_user_id', clerkUserId)

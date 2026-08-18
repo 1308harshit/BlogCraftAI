@@ -1,8 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { routeAI } from '@/lib/ai/router'
+import { requireUser } from '@/lib/auth/require-user'
 
 export async function POST(request: NextRequest) {
   try {
+    // SECURITY FIX: Require authentication
+    const authed = await requireUser()
+    if (!authed.ok) return authed.response
+
     const body = await request.json()
     const { action, prompt, context } = body
 

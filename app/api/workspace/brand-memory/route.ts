@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server'
 import type { BrandMemory } from '@/stores/workspace-store'
 import { bootstrapUser } from '@/lib/auth/bootstrap-user'
 import { requireUser } from '@/lib/auth/require-user'
-import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export async function GET() {
   const authed = await requireUser()
@@ -35,37 +34,20 @@ export async function POST(req: NextRequest) {
   const authed = await requireUser()
   if (!authed.ok) return authed.response
 
-  await bootstrapUser(authed.user.id)
-
-  const admin = getSupabaseAdmin()
-  if (!admin) {
-    return NextResponse.json(
-      { error: 'Server misconfigured: SUPABASE_SERVICE_ROLE_KEY is missing on Netlify.' },
-      { status: 503 }
-    )
-  }
-
-  const { error } = await admin.from('brand_profiles').upsert(
-    {
-      user_id: authed.user.id,
-      niche: body.niche ?? '',
-      writing_style: body.writingStyle ?? '',
-      target_audience: body.targetAudience ?? '',
-      brand_tone: body.brandTone ?? '',
-      seo_goals: body.seoGoals ?? '',
-      onboarding_completed: true,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: 'user_id' }
-  )
+  const { error } = await authed.supabase.from('brand_profiles').upsert({
+    user_id: authed.user.id,
+    niche: body.niche ?? '',
+    writing_style: body.writingStyle ?? '',
+    target_audience: body.targetAudience ?? '',
+    brand_tone: body.brandTone ?? '',
+    seo_goals: body.seoGoals ?? '',
+    onboarding_completed: true,
+    updated_at: new Date().toISOString(),
+  })
 
   if (error) {
     console.error('brand-memory upsert:', error)
-    const hint =
-      error.code === '42P01'
-        ? 'Table brand_profiles is missing. Run db/migrations/0001–0005 in Supabase SQL editor (not supabase/migrations/).'
-        : error.message
-    return NextResponse.json({ error: 'Failed to save brand profile', details: hint }, { status: 500 })
+    return NextResponse.json({ error: 'Failed to save' }, { status: 500 })
   }
 
   return NextResponse.json({ success: true })
