@@ -25,11 +25,11 @@ import {
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { CommandPalette } from '@/components/dashboard/command-palette'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { SignOutButton } from '@/components/auth/sign-out-button'
 import { WorkspaceHydrator } from '@/components/dashboard/workspace-hydrator'
 
-const navItems = [
+const baseNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/dashboard/writer', label: 'AI Writer', icon: PenLine },
   { href: '/dashboard/research', label: 'Research Agent', icon: Search },
@@ -41,15 +41,31 @@ const navItems = [
   { href: '/dashboard/team', label: 'Team', icon: Users },
   { href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-  { href: '/dashboard/admin', label: 'Admin', icon: Shield },
 ]
 
-const mobileNavItems = navItems.slice(0, 5)
+const mobileNavItems = baseNavItems.slice(0, 5)
 
 export function DashboardShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [navItems, setNavItems] = useState(baseNavItems)
+
+  useEffect(() => {
+    async function checkAdminAccess() {
+      try {
+        const res = await fetch('/api/admin/check-access')
+        if (res.ok) {
+          setIsAdmin(true)
+          setNavItems([...baseNavItems, { href: '/dashboard/admin', label: 'Admin', icon: Shield }])
+        }
+      } catch (error) {
+        // Not an admin, keep base nav items
+      }
+    }
+    checkAdminAccess()
+  }, [])
 
   return (
     <div className="flex min-h-screen bg-background">

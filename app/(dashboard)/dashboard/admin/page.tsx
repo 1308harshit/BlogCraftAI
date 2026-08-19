@@ -1,6 +1,8 @@
 'use client'
 
-import { BarChart3, Users, Zap, Server } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { BarChart3, Users, Zap, Server, ShieldAlert } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
@@ -12,13 +14,51 @@ const stats = [
 ]
 
 export default function AdminPage() {
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [hasAccess, setHasAccess] = useState(false)
+
+  useEffect(() => {
+    async function checkAccess() {
+      try {
+        const res = await fetch('/api/admin/check-access')
+        if (res.ok) {
+          setHasAccess(true)
+        } else {
+          router.push('/dashboard')
+        }
+      } catch (error) {
+        router.push('/dashboard')
+      } finally {
+        setLoading(false)
+      }
+    }
+    checkAccess()
+  }, [router])
+
+  if (loading) {
+    return (
+      <div className="flex min-h-[400px] items-center justify-center">
+        <div className="text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+          <p className="mt-4 text-sm text-muted-foreground">Verifying access...</p>
+        </div>
+      </div>
+    )
+  }
+
+  if (!hasAccess) {
+    return null
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold">Admin Panel</h1>
         <p className="text-muted-foreground">System health, subscriptions, and AI usage</p>
         <Badge className="mt-2" variant="secondary">
-          Restrict access via ADMIN_USER_IDS in production
+          <ShieldAlert className="mr-1 h-3 w-3" />
+          Restricted Access
         </Badge>
       </div>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
