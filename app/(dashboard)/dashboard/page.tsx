@@ -14,7 +14,6 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Progress } from '@/components/ui/progress'
 import { useWorkspaceStore } from '@/stores/workspace-store'
 
 const quickActions = [
@@ -23,8 +22,6 @@ const quickActions = [
   { label: 'SEO audit', href: '/dashboard/seo', icon: Gauge },
   { label: 'Make viral', href: '/dashboard/writer?viral=1', icon: TrendingUp },
 ]
-
-const trendingKeywords = ['AI automation', 'content SEO 2026', 'affiliate blogging', 'SaaS marketing']
 
 export default function DashboardPage() {
   const { projects, brandMemory } = useWorkspaceStore()
@@ -108,27 +105,10 @@ export default function DashboardPage() {
         <div className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle className="text-base">Content score</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex items-end justify-between">
-                <span className="text-4xl font-bold text-gradient">87</span>
-                <Badge>+12 this week</Badge>
-              </div>
-              <Progress value={87} className="mt-4" />
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-base">Trending keywords</CardTitle>
+              <CardTitle className="text-base">Public beta</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-wrap gap-2">
-              {trendingKeywords.map((kw) => (
-                <Badge key={kw} variant="secondary">
-                  {kw}
-                </Badge>
-              ))}
+              <p className="text-sm text-muted-foreground">Analytics, automation execution, and paid billing are being released only after their data and integrations are verified.</p>
             </CardContent>
           </Card>
         </div>

@@ -18,6 +18,13 @@ export interface AIResponse {
   model: string
 }
 
+export class AIProviderUnavailableError extends Error {
+  constructor() {
+    super('AI generation is temporarily unavailable. Please try again later.')
+    this.name = 'AIProviderUnavailableError'
+  }
+}
+
 function getOpenAI() {
   const key = process.env.OPENAI_API_KEY
   if (!key) return null
@@ -71,25 +78,7 @@ export async function routeAI(request: AIRequest): Promise<AIResponse> {
     }
   }
 
-  return {
-    content: generateFallback(request),
-    provider: 'openai',
-    model: 'fallback',
-  }
-}
-
-function generateFallback(request: AIRequest): string {
-  return `## Generated Content (Demo Mode)
-
-Add \`OPENAI_API_KEY\` or \`GOOGLE_GENERATIVE_AI_API_KEY\` to enable live AI.
-
-**Task:** ${request.task}
-
-${request.prompt.slice(0, 500)}...
-
----
-
-*Configure API keys in .env.local for production AI generation.*`
+  throw new AIProviderUnavailableError()
 }
 
 export const AI_TASK_PROMPTS: Record<AITask, string> = {
