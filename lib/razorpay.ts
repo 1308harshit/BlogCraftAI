@@ -1,28 +1,30 @@
 import Razorpay from 'razorpay'
 import crypto from 'crypto'
 
-// Create Razorpay instance with fallback for demo mode
+// Payments must fail closed. Demo responses must never grant paid access.
 export const razorpay = process.env.RAZORPAY_KEY_ID && process.env.RAZORPAY_KEY_SECRET
   ? new Razorpay({
       key_id: process.env.RAZORPAY_KEY_ID,
       key_secret: process.env.RAZORPAY_KEY_SECRET,
     })
-  : null // Demo mode - no real Razorpay instance
+  : null
+
+export function isRazorpayConfigured() {
+  return Boolean(
+    process.env.RAZORPAY_KEY_ID &&
+      process.env.RAZORPAY_KEY_SECRET &&
+      process.env.RAZORPAY_WEBHOOK_SECRET &&
+      process.env.RAZORPAY_PLAN_PRO &&
+      process.env.RAZORPAY_PLAN_BUSINESS
+  )
+}
 
 export const createRazorpayOrder = async (
   amount: number, // Amount in paise (₹999 = 99900 paise)
   userId: string,
   userEmail: string
 ) => {
-  if (!razorpay) {
-    // Demo mode
-    return {
-      id: 'demo_order_id',
-      amount: amount,
-      currency: 'INR',
-      receipt: `receipt_${userId}_${Date.now()}`,
-    }
-  }
+  if (!razorpay) throw new Error('Razorpay is not configured')
 
   const order = await razorpay.orders.create({
     amount: amount,
@@ -43,14 +45,7 @@ export const createRazorpaySubscription = async (
   userEmail: string,
   totalCount: number = 12 // 12 months by default
 ) => {
-  if (!razorpay) {
-    // Demo mode
-    return {
-      id: 'demo_subscription_id',
-      plan_id: planId,
-      status: 'created',
-    }
-  }
+  if (!isRazorpayConfigured() || !razorpay) throw new Error('Razorpay is not configured')
 
   const subscription = await razorpay.subscriptions.create({
     plan_id: planId,
@@ -71,9 +66,7 @@ export const verifyRazorpaySignature = (
   paymentId: string,
   signature: string
 ): boolean => {
-  if (!process.env.RAZORPAY_KEY_SECRET) {
-    return true // Demo mode - always valid
-  }
+  if (!process.env.RAZORPAY_KEY_SECRET) return false
 
   const text = `${orderId}|${paymentId}`
   const generatedSignature = crypto
@@ -88,9 +81,7 @@ export const verifyWebhookSignature = (
   body: string,
   signature: string
 ): boolean => {
-  if (!process.env.RAZORPAY_WEBHOOK_SECRET) {
-    return true // Demo mode - always valid
-  }
+  if (!process.env.RAZORPAY_WEBHOOK_SECRET) return false
 
   const expectedSignature = crypto
     .createHmac('sha256', process.env.RAZORPAY_WEBHOOK_SECRET)

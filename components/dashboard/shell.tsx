@@ -41,15 +41,16 @@ const navItems = [
   { href: '/dashboard/team', label: 'Team', icon: Users },
   { href: '/dashboard/billing', label: 'Billing', icon: CreditCard },
   { href: '/dashboard/settings', label: 'Settings', icon: Settings },
-  { href: '/dashboard/admin', label: 'Admin', icon: Shield },
 ]
 
 const mobileNavItems = navItems.slice(0, 5)
 
-export function DashboardShell({ children }: { children: React.ReactNode }) {
+export function DashboardShell({ children, isAdmin = false }: { children: React.ReactNode; isAdmin?: boolean }) {
   const pathname = usePathname()
   const { theme, setTheme } = useTheme()
   const [mobileOpen, setMobileOpen] = useState(false)
+
+  const visibleNavItems = isAdmin ? [...navItems, { href: '/dashboard/admin', label: 'Admin', icon: Shield }] : navItems
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -73,7 +74,7 @@ export function DashboardShell({ children }: { children: React.ReactNode }) {
           </Button>
         </div>
         <nav className="flex-1 space-y-1 overflow-y-auto p-3">
-          {navItems.map((item) => {
+          {visibleNavItems.map((item) => {
             const active = pathname === item.href || pathname.startsWith(item.href + '/')
             return (
               <Link

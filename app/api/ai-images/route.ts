@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 import { requireUser } from '@/lib/auth/require-user'
 
-async function generateWithDalle(prompt: string): Promise<string | null> {
+async function generateWithDalle(prompt: string): Promise<string> {
   const key = process.env.OPENAI_API_KEY
-  if (!key) return null
+  if (!key) throw new Error('AI image generation is not configured')
   const openai = new OpenAI({ apiKey: key })
   try {
     const res = await openai.images.generate({
@@ -13,18 +13,14 @@ async function generateWithDalle(prompt: string): Promise<string | null> {
       size: '1024x1024',
       n: 1,
     })
-    return res.data?.[0]?.url ?? null
+    const url = res.data?.[0]?.url
+    if (!url) throw new Error('AI image provider returned no image')
+    return url
   } catch (e) {
     console.error('DALL-E error:', e)
-    return null
+    throw new Error('AI image generation is temporarily unavailable')
   }
 }
-
-const demoImages = [
-  'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=800&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1676299081847-824916de030a?w=800&h=600&fit=crop',
-  'https://images.unsplash.com/photo-1674027444485-cec3da58eef4?w=800&h=600&fit=crop',
-]
 
 function extractImagePrompts(content: string): string[] {
   const prompts: string[] = []
@@ -49,13 +45,13 @@ export async function POST(request: NextRequest) {
     }
 
     const prompts = extractImagePrompts(text)
-    const limited = prompts.slice(0, imageCount)
+    const requestedCount = Number.isInteger(imageCount) ? imageCount : 3
+    const limited = prompts.slice(0, Math.max(1, Math.min(requestedCount, 3)))
     const images = []
 
     for (let i = 0; i < limited.length; i++) {
       const p = limited[i]
-      let url = await generateWithDalle(p)
-      if (!url) url = demoImages[i % demoImages.length]
+      const url = await generateWithDalle(p)
       images.push({
         id: `img_${i + 1}`,
         prompt: p,
@@ -68,9 +64,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       images,
       totalGenerated: images.length,
-      note: process.env.OPENAI_API_KEY
-        ? 'Generated with DALL-E 3'
-        : 'Demo mode — add OPENAI_API_KEY for real AI images',
+      note: 'Generated with DALL-E 3',
     })
   } catch (error) {
     console.error('AI image generation error:', error)

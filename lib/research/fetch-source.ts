@@ -1,8 +1,10 @@
+import { fetchPublicUrl } from '@/lib/security/safe-fetch'
+
 export async function fetchSourceText(url: string, timeoutMs = 12000): Promise<string> {
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), timeoutMs)
   try {
-    const res = await fetch(url, {
+    const res = await fetchPublicUrl(url, {
       signal: controller.signal,
       headers: {
         'user-agent': 'BlogCraftAI/1.0 (+https://example.com)',

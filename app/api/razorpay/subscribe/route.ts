@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { requireUser } from '@/lib/auth/require-user'
-import { createRazorpaySubscription } from '@/lib/razorpay'
+import { createRazorpaySubscription, isRazorpayConfigured } from '@/lib/razorpay'
 import { envServer } from '@/lib/env-server'
 
 const PLAN_TO_RAZORPAY_PLAN_ID: Record<string, string | undefined> = {
@@ -11,6 +11,10 @@ const PLAN_TO_RAZORPAY_PLAN_ID: Record<string, string | undefined> = {
 export async function POST(req: NextRequest) {
   const authed = await requireUser()
   if (!authed.ok) return authed.response
+
+  if (!isRazorpayConfigured()) {
+    return NextResponse.json({ error: 'Billing is not available yet' }, { status: 503 })
+  }
 
   const { plan } = await req.json()
   if (!plan || typeof plan !== 'string') {
@@ -28,7 +32,12 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  const subscription = await createRazorpaySubscription(razorpayPlanId, authed.user.id, authed.user.email ?? '')
+  let subscription: { id: string; status?: string | null }
+  try {
+    subscription = await createRazorpaySubscription(razorpayPlanId, authed.user.id, authed.user.email ?? '')
+  } catch {
+    return NextResponse.json({ error: 'Unable to start checkout' }, { status: 503 })
+  }
 
   // Store a local subscription row (status will be updated via webhook/verification).
   await authed.supabase.from('subscriptions').insert({
@@ -46,4 +55,3 @@ export async function POST(req: NextRequest) {
     plan,
   })
 }
-

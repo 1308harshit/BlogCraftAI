@@ -94,7 +94,7 @@ export default function AutomationsPage() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold">Automations</h1>
-          <p className="text-muted-foreground">No-code workflows for content at scale</p>
+        <p className="text-muted-foreground">Workflow setup is available; execution is coming soon.</p>
         </div>
       </div>
 
@@ -147,8 +147,8 @@ export default function AutomationsPage() {
                   <Button variant="outline" size="sm" onClick={() => toggle(w.id, w.enabled)}>
                     {w.enabled ? 'Pause' : 'Enable'}
                   </Button>
-                  <Button variant="secondary" size="sm" onClick={() => runNow(w.id)}>
-                    Run now
+                  <Button variant="secondary" size="sm" onClick={() => runNow(w.id)} disabled>
+                    Execution coming soon
                   </Button>
                   <Badge variant={w.enabled ? 'success' : 'secondary'}>
                     {w.enabled ? 'active' : 'paused'}

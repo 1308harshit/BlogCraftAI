@@ -23,9 +23,9 @@ describe('Persistent Learning and Memory Property Tests', () => {
     jest.clearAllMocks()
   })
 
-  it('should retain user preferences across sessions and automatically apply learned preferences', () => {
+  it('should retain user preferences across sessions and automatically apply learned preferences', async () => {
     // Feature: revenue-traffic-engine-transformation, Property 8: Persistent Learning and Memory
-    fc.assert(fc.property(
+    await fc.assert(fc.asyncProperty(
       fc.record({
         userId: fc.string({ minLength: 10, maxLength: 50 }),
         brandVoice: fc.constantFrom('professional', 'casual', 'technical', 'creative'),
@@ -220,16 +220,16 @@ describe('Persistent Learning and Memory Property Tests', () => {
     ), { numRuns: 50 })
   })
 
-  it('should retain and apply successful content patterns across different content generation sessions', () => {
+  it('should retain and apply successful content patterns across different content generation sessions', async () => {
     // Feature: revenue-traffic-engine-transformation, Property 8: Persistent Learning and Memory
-    fc.assert(fc.property(
+    await fc.assert(fc.asyncProperty(
       fc.record({
         userId: fc.string({ minLength: 10, maxLength: 50 }),
         contentType: fc.constantFrom('blog', 'social', 'email', 'video_script'),
         platform: fc.constantFrom('blog', 'twitter', 'linkedin', 'instagram'),
         successPatterns: fc.array(fc.record({
           patternType: fc.constantFrom('content_structure', 'engagement_hook', 'cta_placement', 'timing'),
-          confidence: fc.float({ min: 0.5, max: 1.0 }),
+          confidence: fc.float({ min: Math.fround(0.5), max: Math.fround(1.0) }),
           usageCount: fc.integer({ min: 1, max: 50 }),
           viralScore: fc.integer({ min: 50, max: 100 }),
           engagement: fc.integer({ min: 100, max: 10000 }),
@@ -376,17 +376,17 @@ describe('Persistent Learning and Memory Property Tests', () => {
     ), { numRuns: 30 })
   })
 
-  it('should maintain learning model state and continuously improve content generation without re-prompting', () => {
+  it('should maintain learning model state and continuously improve content generation without re-prompting', async () => {
     // Feature: revenue-traffic-engine-transformation, Property 8: Persistent Learning and Memory
-    fc.assert(fc.property(
+    await fc.assert(fc.asyncProperty(
       fc.record({
         userId: fc.string({ minLength: 10, maxLength: 50 }),
         learningRecords: fc.array(fc.record({
           contentId: fc.string({ minLength: 10, maxLength: 30 }),
-          performanceScore: fc.float({ min: 0.1, max: 1.0 }),
+          performanceScore: fc.float({ min: Math.fround(0.1), max: Math.fround(1.0) }),
           engagement: fc.integer({ min: 50, max: 5000 }),
           conversions: fc.integer({ min: 1, max: 500 }),
-          revenue: fc.float({ min: 10, max: 10000 }),
+          revenue: fc.float({ min: Math.fround(10), max: Math.fround(10000) }),
           learningType: fc.constantFrom('success_pattern', 'failure_analysis', 'preference_update')
         }), { minLength: 3, maxLength: 10 })
       }),

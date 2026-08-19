@@ -1,8 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyWebhookSignature } from '@/lib/razorpay'
+import { isRazorpayConfigured, verifyWebhookSignature } from '@/lib/razorpay'
 import { getSupabaseAdmin } from '@/lib/supabase/admin'
 
 export async function POST(req: NextRequest) {
+  if (!isRazorpayConfigured()) return NextResponse.json({ error: 'Billing is not available yet' }, { status: 503 })
   const rawBody = await req.text()
   const signature = req.headers.get('x-razorpay-signature') ?? ''
 
