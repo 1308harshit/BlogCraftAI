@@ -9,71 +9,53 @@ import { Badge } from '@/components/ui/badge'
 
 const plans = [
   {
-    name: 'Starter',
+    name: 'Free',
     price: '$0',
     desc: 'Try the platform',
     features: [
-      '5 articles/month',
+      '10 AI generations/month',
       'Basic AI writer',
       'SEO scoring',
-      'Viral prediction preview',
-      'Export markdown'
+      'Content analysis',
+      'Export markdown',
+      'Email support'
     ],
     cta: 'Start Free',
     href: '/sign-up',
     popular: false,
   },
   {
-    name: 'Creator',
+    name: 'Pro',
     price: '$49',
-    desc: 'For serious content creators',
+    desc: 'For content creators',
     features: [
-      'Unlimited articles',
-      'Personal AI Brain (learns your style)',
-      'Viral Prediction Engine (85%+ accuracy)',
-      'Auto-monetization (affiliates + CTAs)',
-      'SEO optimization',
-      '1 automation workflow',
-      'All export formats'
+      'Unlimited AI generations',
+      'Advanced AI models',
+      'SEO optimization tools',
+      'Multi-platform publishing',
+      'Content calendar',
+      'Analytics dashboard',
+      'Priority support'
     ],
-    cta: 'Start Creator',
+    cta: 'Start Pro',
     href: '/sign-up',
-    popular: false,
+    popular: true,
   },
   {
     name: 'Business',
     price: '$149',
     desc: 'For teams & agencies',
     features: [
-      'Everything in Creator',
-      'Multi-platform publishing (8 platforms)',
-      'Revenue attribution tracking',
-      'Content DNA analyzer',
-      'A/B testing automation',
-      '10 automation workflows',
-      'Business intelligence dashboard',
-      'Priority support'
+      'Everything in Pro',
+      'Team collaboration (5 members)',
+      'Advanced analytics',
+      'Custom workflows',
+      'White-label options',
+      'API access',
+      'Dedicated support',
+      'Custom integrations'
     ],
     cta: 'Start Business',
-    href: '/sign-up',
-    popular: true,
-  },
-  {
-    name: 'Enterprise',
-    price: '$399',
-    desc: 'For enterprises',
-    features: [
-      'Everything in Business',
-      'Unlimited team members',
-      'White-label solution',
-      '3x traffic guarantee or refund',
-      'Dedicated success manager',
-      'Custom integrations',
-      'SLA-backed performance',
-      'Advanced analytics',
-      'API access'
-    ],
-    cta: 'Contact Sales',
     href: '/sign-up',
     popular: false,
   },
@@ -85,11 +67,11 @@ export function LandingPricing() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
           <Badge className="mb-4 bg-gradient-to-r from-green-600 to-emerald-600">Transparent Pricing</Badge>
-          <h2 className="text-3xl font-bold sm:text-4xl">Enterprise Features, Startup Pricing</h2>
-          <p className="mt-4 text-muted-foreground">Start free. Scale when ready. Cancel anytime.</p>
+          <h2 className="text-3xl font-bold sm:text-4xl">Simple, Transparent Pricing</h2>
+          <p className="mt-4 text-muted-foreground">Start free. Upgrade as you grow. Cancel anytime.</p>
         </div>
         
-        <div className="mt-16 grid gap-8 lg:grid-cols-4">
+        <div className="mt-16 grid gap-8 lg:grid-cols-3">
           {plans.map((plan, i) => (
             <motion.div
               key={plan.name}
@@ -133,13 +115,18 @@ export function LandingPricing() {
                   >
                     <Link href={plan.href}>{plan.cta}</Link>
                   </Button>
+                  {plan.price !== '$0' && (
+                    <p className="text-xs text-center text-muted-foreground mt-3">
+                      Monthly billing • Cancel anytime
+                    </p>
+                  )}
                 </CardContent>
               </Card>
             </motion.div>
           ))}
         </div>
 
-        {/* ROI Calculator Preview */}
+        {/* Feature Comparison */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -147,24 +134,24 @@ export function LandingPricing() {
           className="mt-20 glass-card p-8 max-w-4xl mx-auto"
         >
           <div className="text-center mb-8">
-            <h3 className="text-2xl font-bold">Calculate Your ROI</h3>
-            <p className="text-muted-foreground mt-2">See how much revenue you can generate</p>
+            <h3 className="text-2xl font-bold">What You Get with BlogCraft AI</h3>
+            <p className="text-muted-foreground mt-2">Professional content creation tools at every plan level</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 text-center">
             <div className="p-6 rounded-lg bg-gradient-to-br from-violet-500/10 to-violet-500/5 border border-violet-500/20">
-              <p className="text-3xl font-bold text-violet-500">3x</p>
-              <p className="text-sm text-muted-foreground mt-2">Traffic Growth</p>
-              <p className="text-xs text-muted-foreground mt-1">Guaranteed in 90 days</p>
+              <p className="text-3xl font-bold text-violet-500">3+</p>
+              <p className="text-sm text-muted-foreground mt-2">AI Models</p>
+              <p className="text-xs text-muted-foreground mt-1">OpenAI, Gemini, more</p>
             </div>
             <div className="p-6 rounded-lg bg-gradient-to-br from-cyan-500/10 to-cyan-500/5 border border-cyan-500/20">
-              <p className="text-3xl font-bold text-cyan-500">85%+</p>
-              <p className="text-sm text-muted-foreground mt-2">Viral Accuracy</p>
-              <p className="text-xs text-muted-foreground mt-1">Before publishing</p>
+              <p className="text-3xl font-bold text-cyan-500">20+</p>
+              <p className="text-sm text-muted-foreground mt-2">Content Formats</p>
+              <p className="text-xs text-muted-foreground mt-1">Blogs, social, more</p>
             </div>
             <div className="p-6 rounded-lg bg-gradient-to-br from-green-500/10 to-green-500/5 border border-green-500/20">
-              <p className="text-3xl font-bold text-green-500">₹2.4L</p>
-              <p className="text-sm text-muted-foreground mt-2">Avg Revenue</p>
-              <p className="text-xs text-muted-foreground mt-1">Per month per user</p>
+              <p className="text-3xl font-bold text-green-500">24/7</p>
+              <p className="text-sm text-muted-foreground mt-2">AI Availability</p>
+              <p className="text-xs text-muted-foreground mt-1">Create anytime</p>
             </div>
           </div>
         </motion.div>

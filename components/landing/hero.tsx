@@ -7,10 +7,10 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 
 const stats = [
-  { label: 'Traffic Growth', value: '3x', badge: 'Guaranteed' },
-  { label: 'Viral Accuracy', value: '85%+', badge: 'AI Predicted' },
-  { label: 'Avg Revenue', value: '₹2.4L', badge: 'Per Month' },
-  { label: 'Automation', value: '95%', badge: 'Hands-Free' },
+  { label: 'AI Models', value: '3+', badge: 'Integrated' },
+  { label: 'Content Formats', value: '20+', badge: 'Supported' },
+  { label: 'Platforms', value: '8', badge: 'Publishing' },
+  { label: 'SEO Tools', value: 'Built-in', badge: 'Real-time' },
 ]
 
 export function LandingHero() {
@@ -29,41 +29,39 @@ export function LandingHero() {
         >
           <div className="mb-6 flex items-center justify-center gap-2 flex-wrap">
             <Badge className="bg-gradient-to-r from-violet-600 to-cyan-600">
-              🎯 3x Traffic Guarantee
+              🎯 AI-Powered Content Intelligence
             </Badge>
             <Badge className="bg-gradient-to-r from-green-600 to-emerald-600">
-              🚀 85% Viral Accuracy
+              🚀 Multi-Platform Publishing
             </Badge>
             <Badge className="bg-gradient-to-r from-orange-600 to-red-600">
-              💰 Revenue Attribution
+              💰 Built-in SEO & Monetization
             </Badge>
           </div>
           
           <h1 className="mx-auto max-w-4xl text-4xl font-bold tracking-tight sm:text-6xl lg:text-7xl">
-            Turn Content Into{' '}
-            <span className="text-gradient">Revenue.</span>
-            <br />
-            Guaranteed Results.
+            The AI Growth Engine for{' '}
+            <span className="text-gradient">Content Businesses</span>
           </h1>
           
           <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground sm:text-xl">
-            AI-powered <strong>Revenue Engine</strong> that predicts viral success, automates monetization,
-            and guarantees 3x traffic growth in 90 days — not just another content generator.
+            Research, create, optimize, publish, and measure your content with AI that learns what works for your business. 
+            Complete content growth system in one platform.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
             <Button size="lg" asChild className="min-w-[220px] bg-gradient-to-r from-violet-600 to-cyan-600 hover:from-violet-700 hover:to-cyan-700">
-              <Link href="/sign-up">
-                See Your Viral Score <ArrowRight className="h-4 w-4" />
+              <Link href="/analyze">
+                Analyze My Content <ArrowRight className="h-4 w-4" />
               </Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="#revenue-engine">How It Works</Link>
+              <Link href="#features">See Features</Link>
             </Button>
           </div>
 
           <p className="mt-4 text-sm text-muted-foreground">
-            💎 No credit card required • 🎁 Free viral prediction • 🔒 Cancel anytime
+            Free content analyzer • No signup required • Get instant insights
           </p>
         </motion.div>
 
@@ -79,7 +77,7 @@ export function LandingHero() {
                 <div className="h-3 w-3 rounded-full bg-red-500/80" />
                 <div className="h-3 w-3 rounded-full bg-yellow-500/80" />
                 <div className="h-3 w-3 rounded-full bg-green-500/80" />
-                <span className="ml-2 text-xs text-muted-foreground">BlogCraft Revenue Engine</span>
+                <span className="ml-2 text-xs text-muted-foreground">BlogCraft AI Content Analysis</span>
               </div>
               <div className="grid gap-4 md:grid-cols-3">
                 {[
@@ -97,22 +95,22 @@ export function LandingHero() {
               <div className="mt-4 rounded-lg bg-gradient-to-r from-violet-500/10 to-cyan-500/10 border border-violet-500/20 p-4">
                 <div className="flex items-center gap-2 mb-2">
                   <Target className="h-4 w-4 text-violet-500" />
-                  <span className="text-sm font-medium">Viral Prediction Analysis</span>
+                  <span className="text-sm font-medium">Content Analysis</span>
                 </div>
                 <div className="font-mono text-sm">
                   <span className="text-primary">&gt;</span> Analyzing &quot;AI Content Automation&quot;...
                   <div className="mt-2 space-y-1">
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Viral Score:</span>
-                      <span className="text-green-500 font-bold">87/100 🔥</span>
+                      <span className="text-muted-foreground">Content Score:</span>
+                      <span className="text-green-500 font-bold">87/100</span>
                     </div>
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Predicted Traffic:</span>
-                      <span className="text-cyan-500">12,400 views</span>
+                      <span className="text-muted-foreground">SEO Optimization:</span>
+                      <span className="text-cyan-500">Strong</span>
                     </div>
                     <div className="flex justify-between text-xs">
-                      <span className="text-muted-foreground">Revenue Potential:</span>
-                      <span className="text-green-500">₹8,200</span>
+                      <span className="text-muted-foreground">Readability:</span>
+                      <span className="text-green-500">Excellent</span>
                     </div>
                   </div>
                   <span className="ml-1 inline-block h-4 w-2 animate-pulse bg-primary" />
@@ -146,51 +144,51 @@ export function LandingFeatures() {
   const features = [
     {
       icon: Brain,
-      title: 'Personal AI Brain',
-      desc: 'Learns your success patterns, adapts strategies automatically, and replicates what works. No re-prompting needed.',
-      badge: 'Adaptive Learning'
+      title: 'AI Content Intelligence',
+      desc: 'Adaptive AI system that learns your brand voice and content preferences. Create consistent, on-brand content at scale.',
+      badge: 'Learning System'
     },
     {
       icon: Target,
-      title: 'Viral Prediction Engine',
-      desc: 'Scores content 1-100 with 85%+ accuracy. Know if it will go viral before you publish. Optimize for maximum reach.',
-      badge: '85%+ Accurate'
+      title: 'Content Performance Scoring',
+      desc: 'Multi-factor content analysis covering SEO, readability, engagement potential, and search intent alignment.',
+      badge: 'Real-time Analysis'
     },
     {
       icon: DollarSign,
-      title: 'Auto-Monetization',
-      desc: 'Contextual affiliate links (90%+ relevance), smart CTAs, lead magnets, and complete sales funnels. Revenue on autopilot.',
-      badge: '90%+ Relevance'
+      title: 'Monetization Tools',
+      desc: 'Built-in CTA generation, affiliate link management, and lead magnet creation to help monetize your content.',
+      badge: 'Revenue Tools'
     },
     {
       icon: TrendingUp,
-      title: 'Revenue Attribution',
-      desc: 'Track every ₹ back to specific content. Multi-touch attribution, ROI calculations, and forecasting with confidence intervals.',
-      badge: '95%+ Accuracy'
+      title: 'Analytics Dashboard',
+      desc: 'Track content performance, traffic sources, and engagement metrics. Understand what resonates with your audience.',
+      badge: 'Data-Driven'
     },
     {
       icon: Rocket,
-      title: 'Content DNA Analyzer',
-      desc: 'Reverse-engineer viral content. Extract success patterns, emotional triggers, and replicate what works across topics.',
-      badge: 'Pattern Recognition'
+      title: 'Content Research',
+      desc: 'AI-powered research assistant that helps you discover trending topics, analyze competitors, and find content gaps.',
+      badge: 'Research Tools'
     },
     {
       icon: Zap,
-      title: '8-Platform Domination',
-      desc: 'Auto-adapt and publish to Twitter, LinkedIn, Instagram, YouTube, TikTok, Medium, Facebook, WordPress. One click, all channels.',
-      badge: '8 Platforms'
+      title: 'Multi-Platform Publishing',
+      desc: 'Publish to multiple platforms including WordPress, Medium, and social channels. Manage everything from one dashboard.',
+      badge: 'Integrations'
     },
     {
       icon: Sparkles,
-      title: 'Smart A/B Testing',
-      desc: 'Automatic testing of headlines, hooks, CTAs, formats. Statistical significance calculation and winner implementation.',
-      badge: 'Automated'
+      title: 'SEO Optimization',
+      desc: 'Built-in SEO tools including keyword analysis, meta tag generation, readability scoring, and content structure recommendations.',
+      badge: 'SEO Built-in'
     },
     {
       icon: TrendingUp,
-      title: 'Business Intelligence',
-      desc: 'Revenue forecasting, growth opportunities, competitor analysis, and market intelligence. Make data-driven decisions.',
-      badge: 'Forecasting'
+      title: 'Content Calendar',
+      desc: 'Plan, schedule, and manage your content pipeline. Keep your publishing schedule organized and consistent.',
+      badge: 'Organization'
     },
   ]
 
@@ -198,11 +196,10 @@ export function LandingFeatures() {
     <section id="revenue-engine" className="py-24 bg-gradient-to-b from-background to-card/30">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <Badge className="mb-4 bg-gradient-to-r from-violet-600 to-cyan-600">Revenue Engine Features</Badge>
-          <h2 className="text-3xl font-bold sm:text-4xl">Not Just Content — Business Results</h2>
+          <Badge className="mb-4 bg-gradient-to-r from-violet-600 to-cyan-600">Platform Features</Badge>
+          <h2 className="text-3xl font-bold sm:text-4xl">Complete Content Growth Platform</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            While competitors generate generic content, we guarantee measurable outcomes:
-            traffic growth, revenue attribution, and viral success prediction.
+            Everything you need to research, create, optimize, and publish high-quality content that drives results.
           </p>
         </div>
         
@@ -226,71 +223,27 @@ export function LandingFeatures() {
           ))}
         </div>
 
-        {/* Comparison Table */}
+        {/* Key Capabilities */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           className="mt-20 glass-card p-8"
         >
-          <h3 className="text-2xl font-bold text-center mb-8">Why BlogCraft Dominates</h3>
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left py-4 px-4">Feature</th>
-                  <th className="text-center py-4 px-4">Jasper</th>
-                  <th className="text-center py-4 px-4">Copy.ai</th>
-                  <th className="text-center py-4 px-4 bg-primary/10 rounded-t-lg">
-                    <span className="font-bold text-primary">BlogCraft</span>
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border">
-                <tr>
-                  <td className="py-4 px-4 font-medium">Viral Prediction Engine</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4 bg-primary/5">✅ 85%+</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-4 font-medium">Personal AI Brain (Learning)</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4 bg-primary/5">✅</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-4 font-medium">Revenue Attribution</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4 bg-primary/5">✅</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-4 font-medium">Auto-Monetization</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4 bg-primary/5">✅ 90%</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-4 font-medium">8-Platform Publishing</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4 bg-primary/5">✅</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-4 font-medium">Traffic Growth Guarantee</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4 bg-primary/5">✅ 3x</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-4 font-medium">Content DNA Analysis</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4">❌</td>
-                  <td className="text-center py-4 px-4 bg-primary/5">✅</td>
-                </tr>
-              </tbody>
-            </table>
+          <h3 className="text-2xl font-bold text-center mb-8">What Makes BlogCraft Different</h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-primary mb-2">Complete System</div>
+              <p className="text-sm text-muted-foreground">Research, write, optimize, publish, and measure — all in one platform</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-primary mb-2">AI-Powered</div>
+              <p className="text-sm text-muted-foreground">Multiple AI models working together for better content creation</p>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-primary mb-2">Built for Growth</div>
+              <p className="text-sm text-muted-foreground">SEO tools, analytics, and monetization features built-in from day one</p>
+            </div>
           </div>
         </motion.div>
       </div>

@@ -1,50 +1,24 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Workflow, Globe2, Quote, Plug, TrendingUp, Sparkles, Target, DollarSign } from 'lucide-react'
+import { Workflow, Globe2, Plug, TrendingUp, Sparkles, Target, DollarSign, FileText } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 
 const workflows = [
   { 
+    icon: FileText,
+    title: 'Research → Write → Optimize', 
+    desc: 'AI-powered research, content generation, and SEO optimization in one workflow'
+  },
+  { 
     icon: Target,
-    title: 'Viral Prediction → Optimization → Publish', 
-    desc: 'Score content before publishing, get optimization tips, guarantee results'
+    title: 'Content Analysis & Scoring', 
+    desc: 'Real-time content scoring for SEO, readability, and engagement potential'
   },
   { 
-    icon: DollarSign,
-    title: 'Content → Monetization → Revenue Tracking', 
-    desc: 'Auto-insert affiliates, CTAs, funnels, track every rupee back to content'
-  },
-  { 
-    icon: TrendingUp,
-    title: 'Research → Write → 8 Platforms → Analytics', 
-    desc: 'One article, published everywhere, full attribution tracking'
-  },
-]
-
-const integrations = [
-  'WordPress', 'Medium', 'Ghost', 'LinkedIn', 'Twitter/X', 'Instagram', 
-  'YouTube', 'TikTok', 'Razorpay', 'Shopify', 'HubSpot', 'Mailchimp'
-]
-
-const testimonials = [
-  {
-    quote: 'BlogCraft\'s viral prediction gave us 87% accuracy. We went from 2K to 24K monthly visitors in 60 days. Revenue increased ₹18L/month.',
-    author: 'Rahul Kumar',
-    role: 'Founder, TechStartup.io',
-    metrics: '+1100% traffic • ₹18L revenue'
-  },
-  {
-    quote: 'The Personal AI Brain learned our brand voice perfectly. Content production time dropped 85% while quality improved. Our team loves it.',
-    author: 'Priya Sharma',
-    role: 'Content Director, SaaS Company',
-    metrics: '85% faster • Better quality'
-  },
-  {
-    quote: 'Revenue attribution changed everything. We finally know which content drives sales. ROI tracking justified our entire content budget.',
-    author: 'Marcus Thompson',
-    role: 'CMO, E-commerce Brand',
-    metrics: '12x ROI • Full attribution'
+    icon: Globe2,
+    title: 'Multi-Platform Publishing', 
+    desc: 'Publish to WordPress, Medium, and social platforms from one dashboard'
   },
 ]
 
@@ -53,10 +27,10 @@ export function LandingWorkflows() {
     <section id="workflows" className="border-y border-border/50 bg-gradient-to-b from-card/30 to-background py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <Badge className="mb-4 bg-gradient-to-r from-orange-600 to-red-600">Revenue Workflows</Badge>
-          <h2 className="text-3xl font-bold sm:text-4xl">From Content to Cash Flow — Fully Automated</h2>
+          <Badge className="mb-4 bg-gradient-to-r from-orange-600 to-red-600">Complete Workflow</Badge>
+          <h2 className="text-3xl font-bold sm:text-4xl">From Idea to Published Content</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Complete automation from viral prediction to revenue tracking. 95% hands-free operation.
+            End-to-end content creation workflow powered by AI, built for modern content teams.
           </p>
         </div>
         <div className="mt-16 grid gap-6 md:grid-cols-3">
@@ -76,7 +50,7 @@ export function LandingWorkflows() {
           ))}
         </div>
         
-        {/* Live Metrics Dashboard Preview */}
+        {/* Platform Capabilities */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -84,25 +58,25 @@ export function LandingWorkflows() {
           className="mt-16 glass-card p-8 max-w-4xl mx-auto"
         >
           <div className="text-center mb-6">
-            <Badge className="mb-2">Real-Time Platform Metrics</Badge>
-            <p className="text-sm text-muted-foreground">Live data from the Revenue Engine</p>
+            <Badge className="mb-2">Platform Capabilities</Badge>
+            <p className="text-sm text-muted-foreground">What you can do with BlogCraft AI</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-4 rounded-lg bg-violet-500/10 border border-violet-500/20">
-              <p className="text-2xl font-bold text-violet-500">12,847</p>
-              <p className="text-xs text-muted-foreground mt-1">Articles Today</p>
+              <p className="text-2xl font-bold text-violet-500">3+</p>
+              <p className="text-xs text-muted-foreground mt-1">AI Models</p>
             </div>
             <div className="text-center p-4 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-              <p className="text-2xl font-bold text-cyan-500">3,421</p>
-              <p className="text-xs text-muted-foreground mt-1">Viral Predictions</p>
+              <p className="text-2xl font-bold text-cyan-500">20+</p>
+              <p className="text-xs text-muted-foreground mt-1">Content Formats</p>
             </div>
             <div className="text-center p-4 rounded-lg bg-green-500/10 border border-green-500/20">
-              <p className="text-2xl font-bold text-green-500">₹28.4L</p>
-              <p className="text-xs text-muted-foreground mt-1">Revenue Tracked</p>
+              <p className="text-2xl font-bold text-green-500">SEO</p>
+              <p className="text-xs text-muted-foreground mt-1">Built-in Tools</p>
             </div>
             <div className="text-center p-4 rounded-lg bg-orange-500/10 border border-orange-500/20">
-              <p className="text-2xl font-bold text-orange-500">8,934</p>
-              <p className="text-xs text-muted-foreground mt-1">Active Automations</p>
+              <p className="text-2xl font-bold text-orange-500">8</p>
+              <p className="text-xs text-muted-foreground mt-1">Publishing Platforms</p>
             </div>
           </div>
         </motion.div>
@@ -115,10 +89,10 @@ export function LandingIntegrations() {
   return (
     <section className="py-24 bg-gradient-to-b from-background to-card/30">
       <div className="mx-auto max-w-7xl px-4 text-center sm:px-6 lg:px-8">
-        <Badge className="mb-4 bg-gradient-to-r from-purple-600 to-blue-600">8-Platform Domination</Badge>
-        <h2 className="text-3xl font-bold">Publish Everywhere. Track Everything.</h2>
+        <Badge className="mb-4 bg-gradient-to-r from-purple-600 to-blue-600">Integrations</Badge>
+        <h2 className="text-3xl font-bold">Publish Everywhere From One Place</h2>
         <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-          One article → 8 platforms → Full revenue attribution. Write once, dominate everywhere.
+          Connect your favorite platforms and manage all your content from a single dashboard.
         </p>
         
         <div className="mt-12 grid gap-8 md:grid-cols-3">
@@ -127,12 +101,11 @@ export function LandingIntegrations() {
               <Globe2 className="h-6 w-6 text-blue-500" />
             </div>
             <h3 className="font-semibold mb-2">Content Platforms</h3>
-            <p className="text-sm text-muted-foreground mb-4">Distribute your content everywhere</p>
+            <p className="text-sm text-muted-foreground mb-4">Publish to popular blogging platforms</p>
             <div className="flex flex-wrap gap-2">
               <Badge variant="secondary">WordPress</Badge>
               <Badge variant="secondary">Medium</Badge>
               <Badge variant="secondary">Ghost</Badge>
-              <Badge variant="secondary">LinkedIn</Badge>
             </div>
           </div>
           
@@ -141,12 +114,11 @@ export function LandingIntegrations() {
               <TrendingUp className="h-6 w-6 text-purple-500" />
             </div>
             <h3 className="font-semibold mb-2">Social Networks</h3>
-            <p className="text-sm text-muted-foreground mb-4">Amplify reach and engagement</p>
+            <p className="text-sm text-muted-foreground mb-4">Share across social channels</p>
             <div className="flex flex-wrap gap-2">
+              <Badge variant="secondary">LinkedIn</Badge>
               <Badge variant="secondary">Twitter/X</Badge>
-              <Badge variant="secondary">Instagram</Badge>
-              <Badge variant="secondary">YouTube</Badge>
-              <Badge variant="secondary">TikTok</Badge>
+              <Badge variant="secondary">More coming</Badge>
             </div>
           </div>
           
@@ -154,13 +126,11 @@ export function LandingIntegrations() {
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-green-500/10 mb-4">
               <DollarSign className="h-6 w-6 text-green-500" />
             </div>
-            <h3 className="font-semibold mb-2">Revenue Tools</h3>
-            <p className="text-sm text-muted-foreground mb-4">Monetize and track attribution</p>
+            <h3 className="font-semibold mb-2">Analytics & Tools</h3>
+            <p className="text-sm text-muted-foreground mb-4">Track performance and growth</p>
             <div className="flex flex-wrap gap-2">
-              <Badge variant="secondary">Razorpay</Badge>
-              <Badge variant="secondary">Shopify</Badge>
-              <Badge variant="secondary">HubSpot</Badge>
-              <Badge variant="secondary">Mailchimp</Badge>
+              <Badge variant="secondary">Built-in Analytics</Badge>
+              <Badge variant="secondary">SEO Tools</Badge>
             </div>
           </div>
         </div>
@@ -171,10 +141,9 @@ export function LandingIntegrations() {
           viewport={{ once: true }}
           className="mt-12 glass-card p-6 max-w-2xl mx-auto"
         >
-          <p className="text-sm font-medium mb-2">🎯 Full Attribution Tracking</p>
+          <p className="text-sm font-medium mb-2">🎯 Unified Dashboard</p>
           <p className="text-xs text-muted-foreground">
-            Every click, conversion, and rupee tracked back to the exact article, platform, and timestamp. 
-            Know exactly what content drives revenue across all 8 platforms.
+            Manage all your content, track performance, and optimize your strategy from one central location.
           </p>
         </motion.div>
       </div>
@@ -187,31 +156,31 @@ export function LandingTestimonials() {
     <section className="py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge className="mb-4">Real Results</Badge>
-          <h2 className="text-3xl font-bold">Customers Who Transformed Their Business</h2>
-          <p className="text-muted-foreground mt-4">Actual metrics from real customers</p>
+          <Badge className="mb-4">Trusted by Content Creators</Badge>
+          <h2 className="text-3xl font-bold">Built for Modern Content Teams</h2>
+          <p className="text-muted-foreground mt-4">Join content creators, marketers, and agencies using BlogCraft AI</p>
         </div>
-        <div className="grid gap-6 md:grid-cols-3">
-          {testimonials.map((t, i) => (
-            <motion.div
-              key={t.author}
-              initial={{ opacity: 0, y: 16 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-              className="glass-card p-6 hover:border-primary/30 transition-all"
-            >
-              <Quote className="mb-4 h-6 w-6 text-primary/60" />
-              <p className="text-sm leading-relaxed">&ldquo;{t.quote}&rdquo;</p>
-              <div className="mt-6 pt-4 border-t border-border">
-                <p className="font-medium">{t.author}</p>
-                <p className="text-xs text-muted-foreground mt-1">{t.role}</p>
-                <Badge variant="secondary" className="mt-3 text-xs bg-green-500/10 text-green-500 border-green-500/20">
-                  {t.metrics}
-                </Badge>
-              </div>
-            </motion.div>
-          ))}
+        
+        <div className="grid gap-8 md:grid-cols-3 max-w-5xl mx-auto">
+          <div className="glass-card p-8 text-center">
+            <div className="text-4xl font-bold text-primary mb-2">3+</div>
+            <p className="text-sm text-muted-foreground">AI Models Integrated</p>
+          </div>
+          <div className="glass-card p-8 text-center">
+            <div className="text-4xl font-bold text-primary mb-2">20+</div>
+            <p className="text-sm text-muted-foreground">Content Formats</p>
+          </div>
+          <div className="glass-card p-8 text-center">
+            <div className="text-4xl font-bold text-primary mb-2">8</div>
+            <p className="text-sm text-muted-foreground">Publishing Platforms</p>
+          </div>
+        </div>
+
+        <div className="mt-12 text-center">
+          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+            BlogCraft AI combines research, writing, SEO optimization, and publishing tools 
+            into one unified platform designed for content businesses.
+          </p>
         </div>
       </div>
     </section>
@@ -223,10 +192,10 @@ export function LandingSEO() {
     <section className="border-t border-border/50 py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <Badge className="mb-4">Revenue Engine Capabilities</Badge>
-          <h2 className="text-3xl font-bold">Beyond Writing — Complete Revenue Stack</h2>
+          <Badge className="mb-4">Core Features</Badge>
+          <h2 className="text-3xl font-bold">Everything You Need for Content Success</h2>
           <p className="mt-4 text-muted-foreground max-w-2xl mx-auto">
-            Everything you need to turn content into predictable revenue streams
+            Comprehensive tools to help you research, create, optimize, and publish high-performing content
           </p>
         </div>
         
@@ -238,9 +207,9 @@ export function LandingSEO() {
             className="glass-card p-6"
           >
             <Target className="h-8 w-8 text-violet-500 mb-4" />
-            <h3 className="font-semibold mb-2">Viral Prediction Engine</h3>
+            <h3 className="font-semibold mb-2">Content Scoring</h3>
             <p className="text-sm text-muted-foreground">
-              85%+ accuracy in predicting viral potential. Score content before publishing, get optimization suggestions, guarantee results.
+              Real-time analysis of SEO, readability, engagement potential, and content structure.
             </p>
           </motion.div>
           
@@ -252,9 +221,9 @@ export function LandingSEO() {
             className="glass-card p-6"
           >
             <Sparkles className="h-8 w-8 text-cyan-500 mb-4" />
-            <h3 className="font-semibold mb-2">Personal AI Brain</h3>
+            <h3 className="font-semibold mb-2">AI Writing Assistant</h3>
             <p className="text-sm text-muted-foreground">
-              Learns your brand voice, audience preferences, and success patterns. Gets smarter with every article you publish.
+              Multiple AI models working together to help you create engaging, high-quality content.
             </p>
           </motion.div>
           
@@ -266,9 +235,9 @@ export function LandingSEO() {
             className="glass-card p-6"
           >
             <DollarSign className="h-8 w-8 text-green-500 mb-4" />
-            <h3 className="font-semibold mb-2">Auto-Monetization</h3>
+            <h3 className="font-semibold mb-2">Monetization Tools</h3>
             <p className="text-sm text-muted-foreground">
-              90%+ CTR on AI-generated CTAs and affiliate links. Automatically inserts best-performing monetization elements.
+              Built-in CTA generation, affiliate link management, and lead magnet creation.
             </p>
           </motion.div>
           
@@ -280,9 +249,9 @@ export function LandingSEO() {
             className="glass-card p-6"
           >
             <TrendingUp className="h-8 w-8 text-orange-500 mb-4" />
-            <h3 className="font-semibold mb-2">Revenue Attribution</h3>
+            <h3 className="font-semibold mb-2">Analytics Dashboard</h3>
             <p className="text-sm text-muted-foreground">
-              Track every rupee back to exact content. Know your ROI per article, per platform, per CTA. Full financial transparency.
+              Track content performance, traffic sources, and engagement metrics over time.
             </p>
           </motion.div>
           
@@ -294,9 +263,9 @@ export function LandingSEO() {
             className="glass-card p-6"
           >
             <Globe2 className="h-8 w-8 text-blue-500 mb-4" />
-            <h3 className="font-semibold mb-2">Content DNA Analyzer</h3>
+            <h3 className="font-semibold mb-2">Research Tools</h3>
             <p className="text-sm text-muted-foreground">
-              Analyze top-performing content in your niche. Extract patterns, reverse-engineer success, replicate what works.
+              AI-powered topic research, competitor analysis, and content gap identification.
             </p>
           </motion.div>
           
@@ -308,9 +277,9 @@ export function LandingSEO() {
             className="glass-card p-6"
           >
             <Workflow className="h-8 w-8 text-purple-500 mb-4" />
-            <h3 className="font-semibold mb-2">Smart A/B Testing</h3>
+            <h3 className="font-semibold mb-2">Content Calendar</h3>
             <p className="text-sm text-muted-foreground">
-              Test headlines, CTAs, monetization strategies. Auto-optimize based on real performance data. Continuous improvement.
+              Plan, schedule, and manage your content pipeline with an organized calendar view.
             </p>
           </motion.div>
         </div>
@@ -321,11 +290,11 @@ export function LandingSEO() {
           viewport={{ once: true }}
           className="mt-12 glass-card p-8 max-w-4xl mx-auto text-center"
         >
-          <Badge className="mb-4 bg-gradient-to-r from-green-600 to-emerald-600">Enterprise SEO Included</Badge>
-          <h3 className="text-xl font-bold mb-2">Complete SEO Stack Built-In</h3>
+          <Badge className="mb-4 bg-gradient-to-r from-green-600 to-emerald-600">SEO Optimization</Badge>
+          <h3 className="text-xl font-bold mb-2">SEO Tools Built Into Every Workflow</h3>
           <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            Live scoring, keyword density analysis, meta generation, schema markup, SERP snippet preview, 
-            and competitor comparison — all automated in every article you write.
+            Real-time SEO scoring, keyword analysis, meta tag generation, readability checks, 
+            and content structure recommendations—all automated and integrated into your writing process.
           </p>
         </motion.div>
       </div>

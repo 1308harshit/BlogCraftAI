@@ -21,6 +21,9 @@ import {
   Menu,
   X,
   Shield,
+  Brain,
+  Share2,
+  DollarSign,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -31,9 +34,13 @@ import { WorkspaceHydrator } from '@/components/dashboard/workspace-hydrator'
 
 const baseNavItems = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/dashboard/god-mode', label: 'God Mode', icon: Brain },
   { href: '/dashboard/writer', label: 'AI Writer', icon: PenLine },
+  { href: '/dashboard/content-intelligence', label: 'Content Intelligence', icon: Sparkles },
   { href: '/dashboard/research', label: 'Research Agent', icon: Search },
   { href: '/dashboard/seo', label: 'SEO Engine', icon: Gauge },
+  { href: '/dashboard/distribution', label: 'Distribution', icon: Share2 },
+  { href: '/dashboard/revenue', label: 'Revenue', icon: DollarSign },
   { href: '/dashboard/templates', label: 'Templates', icon: LayoutTemplate },
   { href: '/dashboard/images', label: 'AI Images', icon: Image },
   { href: '/dashboard/automations', label: 'Automations', icon: Workflow },

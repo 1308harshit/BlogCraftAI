@@ -505,7 +505,7 @@ function DangerZoneTab() {
               <p className="text-sm text-muted-foreground mt-1">
                 Permanently delete your account and all associated data. This action cannot be undone.
               </p>
-              <Button variant="destructive" size="sm" className="mt-3">
+              <Button variant="outline" size="sm" className="mt-3 border-red-500 text-red-500 hover:bg-red-500/10">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete Account
               </Button>

@@ -17,6 +17,9 @@ export function LandingNav() {
           BlogCraft AI
         </Link>
         <nav className="hidden items-center gap-8 md:flex">
+          <a href="/analyze" className="text-sm text-muted-foreground hover:text-foreground">
+            Free Analyzer
+          </a>
           <a href="#features" className="text-sm text-muted-foreground hover:text-foreground">
             Features
           </a>
@@ -78,36 +81,44 @@ export function LandingFooter() {
 export function LandingFAQ() {
   const faqs = [
     {
-      q: 'How is BlogCraft different from Jasper or Copy.ai?',
-      a: 'BlogCraft is a complete Revenue Engine, not just an AI writer. We predict viral potential (85%+ accuracy), auto-monetize content (90%+ CTR), track every rupee of revenue attribution, and publish to 8 platforms simultaneously. Jasper and Copy.ai just generate text.',
+      q: 'What makes BlogCraft AI different from other AI writing tools?',
+      a: 'BlogCraft is a complete content platform, not just an AI writer. We combine research tools, multiple AI models, SEO optimization, content scoring, multi-platform publishing, and analytics in one unified dashboard.',
     },
     {
-      q: 'What does "85% viral accuracy" actually mean?',
-      a: 'Our Viral Prediction Engine analyzes 23 engagement factors and predicts whether your content will go viral before you publish. Historical accuracy is 85%+. You get a viral score (0-100) and optimization suggestions to maximize reach.',
+      q: 'What AI models does BlogCraft use?',
+      a: 'We integrate multiple AI models including OpenAI (GPT-4), Google Gemini, and others. The system automatically routes requests to the best available model for your task, with fallback options for reliability.',
     },
     {
-      q: 'How does revenue attribution work?',
-      a: 'Every article gets unique tracking codes for all CTAs, affiliate links, and funnels. We track clicks, conversions, and revenue back to the exact content piece, platform, and timestamp. You see ROI per article in real-time.',
+      q: 'How does content scoring work?',
+      a: 'Our content analysis examines multiple factors including SEO optimization, readability, structure, keyword usage, and search intent alignment. You get a comprehensive score with specific recommendations to improve your content.',
     },
     {
-      q: 'What is the Personal AI Brain?',
-      a: 'Your AI Brain learns from every article you write, every engagement metric, and every conversion. It adapts to your brand voice, understands your audience, and continuously improves recommendations. It gets smarter with use.',
+      q: 'Can I publish to multiple platforms?',
+      a: 'Yes. We currently support WordPress, Medium, Ghost, and are expanding to more platforms including LinkedIn and Twitter/X. Manage all your content and publishing from one dashboard.',
     },
     {
-      q: 'Can I really publish to 8 platforms automatically?',
-      a: 'Yes. WordPress, Medium, Ghost, LinkedIn, Twitter/X, Instagram, YouTube, and TikTok. One article → all platforms → full cross-platform analytics. Business and Enterprise plans included.',
+      q: 'What is included in the free plan?',
+      a: 'The free plan includes 10 AI generations per month, basic AI writing tools, SEO scoring, content analysis, markdown export, and email support. Perfect for trying out the platform.',
     },
     {
-      q: 'What happens if viral predictions are wrong?',
-      a: 'Enterprise plans include SLA-backed guarantees: 3x traffic increase in 90 days or money back. If predictions consistently miss, we refund your subscription. We stand behind our technology.',
+      q: 'Can I upgrade or downgrade my plan anytime?',
+      a: 'Yes. You can upgrade, downgrade, or cancel your subscription at any time. Changes take effect at the start of your next billing cycle. No long-term contracts required.',
     },
     {
-      q: 'Is there a free trial?',
-      a: 'Yes. The Starter plan is free forever (5 articles/month, basic features). Upgrade to Creator ($49/mo) or Business ($149/mo) for viral prediction, auto-monetization, and multi-platform publishing. No credit card required for Starter.',
+      q: 'Is there a team collaboration feature?',
+      a: 'Yes. The Business plan includes team collaboration features with support for up to 5 team members, shared workspaces, and collaborative editing.',
     },
     {
-      q: 'Do I need technical skills to use this?',
-      a: 'No. The entire platform is no-code. Write in our editor, click "Predict & Optimize", review suggestions, and publish everywhere with one button. 95% automation, 5% human oversight.',
+      q: 'What kind of support do you offer?',
+      a: 'All plans include email support. Pro plans get priority support with faster response times. Business plans include dedicated support and onboarding assistance.',
+    },
+    {
+      q: 'Do I need technical skills to use BlogCraft?',
+      a: 'No technical skills required. The platform is designed to be intuitive and user-friendly. If you can use a word processor, you can use BlogCraft AI.',
+    },
+    {
+      q: 'Can I export my content?',
+      a: 'Yes. You can export your content in multiple formats including Markdown, HTML, and plain text. Your content is always yours to keep.',
     },
   ]
 
@@ -116,8 +127,8 @@ export function LandingFAQ() {
       <div className="mx-auto max-w-3xl px-4 sm:px-6">
         <div className="text-center mb-12">
           <Badge className="mb-4">Got Questions?</Badge>
-          <h2 className="text-3xl font-bold">Revenue Engine FAQ</h2>
-          <p className="text-muted-foreground mt-4">Everything you need to know about turning content into revenue</p>
+          <h2 className="text-3xl font-bold">Frequently Asked Questions</h2>
+          <p className="text-muted-foreground mt-4">Everything you need to know about BlogCraft AI</p>
         </div>
         <div className="mt-12 space-y-6">
           {faqs.map((faq) => (
@@ -131,10 +142,10 @@ export function LandingFAQ() {
         <div className="mt-12 glass-card p-8 text-center bg-gradient-to-br from-primary/5 to-primary/10 border-primary/20">
           <h3 className="text-xl font-bold mb-2">Still have questions?</h3>
           <p className="text-sm text-muted-foreground mb-6">
-            Schedule a demo with our team to see the Revenue Engine in action
+            Contact our team to learn more about how BlogCraft AI can help your content business
           </p>
-          <Button size="lg" className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700">
-            Book a Demo Call
+          <Button size="lg" asChild>
+            <Link href="/sign-up">Get Started Free</Link>
           </Button>
         </div>
       </div>
