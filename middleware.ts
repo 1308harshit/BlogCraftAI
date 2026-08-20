@@ -5,6 +5,7 @@ import { envPublic } from '@/lib/env'
 function isPublicPath(pathname: string) {
   return (
     pathname === '/' ||
+    pathname.startsWith('/analyze') ||
     pathname.startsWith('/login') ||
     pathname.startsWith('/signup') ||
     pathname.startsWith('/auth/callback') ||

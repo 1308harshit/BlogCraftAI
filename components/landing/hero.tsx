@@ -24,7 +24,7 @@ export function LandingHero() {
               <Link href="/signup">Try the beta <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
             <Button size="lg" variant="outline" asChild>
-              <Link href="#features">Explore features</Link>
+              <Link href="/analyze">Try the free analyzer</Link>
             </Button>
           </div>
           <p className="mt-4 text-sm text-muted-foreground">No payment details required during the public beta.</p>
